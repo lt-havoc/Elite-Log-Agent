@@ -1,13 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="16">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FD518ED2-7A6E-42F7-8C90-603235C1FEE6}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DW.ELA.Interfaces</RootNamespace>
     <AssemblyName>DW.ELA.Interfaces</AssemblyName>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
     <LangVersion>8.0</LangVersion>
     <NullableContextOptions>disable</NullableContextOptions>
   </PropertyGroup>
@@ -32,7 +36,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.9" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>
