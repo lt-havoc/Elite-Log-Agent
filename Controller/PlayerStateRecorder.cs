@@ -6,6 +6,7 @@
     using System.Linq;
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Events;
+    using DW.ELA.Utility.Extensions;
     using MoreLinq;
     using NLog;
 

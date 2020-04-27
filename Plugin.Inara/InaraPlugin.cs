@@ -81,14 +81,14 @@
         }
 
 
-        public override AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => new MultiCmdrApiKeyControl()
-        {
-            ApiKeys = GetActualApiKeys(),
-            ApiKeyValidator = this,
-            ApiSettingsLink = "https://inara.cz/settings-api/",
-            GlobalSettings = settings,
-            SaveSettingsFunc = SaveSettings
-        };
+        // public override AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => new MultiCmdrApiKeyControl()
+        // {
+        //     ApiKeys = GetActualApiKeys(),
+        //     ApiKeyValidator = this,
+        //     ApiSettingsLink = "https://inara.cz/settings-api/",
+        //     GlobalSettings = settings,
+        //     SaveSettingsFunc = SaveSettings
+        // };
 
         private void SaveSettings(GlobalSettings settings, IReadOnlyDictionary<string, string> values) =>
             new PluginSettingsFacade<InaraSettings>(PluginId).SetPluginSettings(settings, new InaraSettings() { ApiKeys = values.ToDictionary() });

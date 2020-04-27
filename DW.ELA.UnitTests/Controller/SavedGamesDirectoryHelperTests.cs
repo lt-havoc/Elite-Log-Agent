@@ -3,6 +3,8 @@
     using DW.ELA.Controller;
     using NUnit.Framework;
 
+    // TODO: run on Windows only
+    [Explicit]
     public class SavedGamesDirectoryHelperTests
     {
         [Test]

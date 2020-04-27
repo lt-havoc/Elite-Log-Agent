@@ -49,7 +49,7 @@
 
         protected ConcurrentQueue<TEvent> EventQueue { get; } = new ConcurrentQueue<TEvent>();
 
-        public abstract AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings);
+        //public abstract AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings);
 
         public abstract void FlushEvents(ICollection<TEvent> events);
 
