@@ -16,14 +16,21 @@
         IObserver<JournalEvent> GetLogObserver();
 
         /// <summary>
-        /// Gets a control which changes plugin settings
+        /// Gets a view model which changes plugin settings
         /// Method is provided with a reference to settings item which can be changed
-        /// Form MUST NOT change any global state - only the passed GlobalSettings instance
+        /// View model MUST NOT change any global state - only the passed GlobalSettings instance
         /// </summary>
         /// <param name="settings">Instance of temporary settings object held in setup session</param>
-        /// <returns>Plugin settings control</returns>
-        //AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings);
-
+        /// <returns>Plugin settings view model</returns>
+#nullable enable
+        AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
+        
+        /// <summary>
+        /// Gets the type of the view associated with the view model
+        /// </summary>
+        /// <returns>Plugin settings view's type</returns>
+        Type View { get; }
+#nullable restore
         /// <summary>
         /// Callback to signal settings have changed and it's time to update
         /// </summary>

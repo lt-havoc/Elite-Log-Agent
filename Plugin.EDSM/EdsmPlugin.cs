@@ -120,16 +120,12 @@
                 Log.Error(e, "Error while processing events for EDSM");
             }
         }
+#nullable enable
+        public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => 
+            new MultiCmdrApiKeyViewModel(PluginId, GetActualApiKeys(), this, "https://www.edsm.net/en/settings/api", settings, SaveSettings);
 
-        // public override AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => new MultiCmdrApiKeyControl()
-        // {
-        //     ApiKeys = GetActualApiKeys(),
-        //     ApiKeyValidator = this,
-        //     ApiSettingsLink = "https://www.edsm.net/en/settings/api",
-        //     GlobalSettings = settings,
-        //     SaveSettingsFunc = SaveSettings
-        // };
-
+        public override Type View => MultiCmdrApiKeyControl.View;
+#nullable restore
         private void SaveSettings(GlobalSettings settings, IReadOnlyDictionary<string, string> values) => new PluginSettingsFacade<EdsmSettings>(PluginId).SetPluginSettings(settings, new EdsmSettings() { ApiKeys = values.ToDictionary() });
 
         public async Task<bool> ValidateKeyAsync(string cmdrName, string apiKey)

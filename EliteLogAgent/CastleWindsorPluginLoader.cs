@@ -1,4 +1,4 @@
-﻿namespace EliteLogAgent
+﻿﻿namespace EliteLogAgent
 {
     using System;
     using System.Collections.Generic;
@@ -33,7 +33,11 @@
         {
             try
             {
-                string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string? assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                
+                if (assemblyDirectory == null)
+                    throw new FileNotFoundException();
+                
                 if (!pluginAssemblyName.EndsWith(".dll"))
                     pluginAssemblyName += ".dll";
 

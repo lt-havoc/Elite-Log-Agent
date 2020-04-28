@@ -48,9 +48,11 @@
         }
 
         protected ConcurrentQueue<TEvent> EventQueue { get; } = new ConcurrentQueue<TEvent>();
+#nullable enable
+        public abstract AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
 
-        //public abstract AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings);
-
+        public abstract Type View { get; }
+#nullable restore
         public abstract void FlushEvents(ICollection<TEvent> events);
 
         public abstract void ReloadSettings();

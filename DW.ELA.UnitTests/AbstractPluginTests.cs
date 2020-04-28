@@ -63,9 +63,11 @@
                 foreach (var e in events)
                     Flushed.Add(e);
             }
-
-            //public override AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => null;
-
+#nullable enable
+            public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => null!;
+            
+            public override Type View => typeof(object);
+#nullable restore
             public override void ReloadSettings()
             {
             }

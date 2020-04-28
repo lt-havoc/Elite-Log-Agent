@@ -1,130 +1,117 @@
-﻿namespace EliteLogAgent
+﻿﻿namespace EliteLogAgent
 {
     using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Linq;
-    using System.Windows.Forms;
     using DW.ELA.Interfaces;
-    using DW.ELA.Utility;
-    using EliteLogAgent.Properties;
 
+    // TODO: Implement avalonia based tray icon
     public class TrayIconController : IUserNotificationInterface, IDisposable
     {
-        private static Form form;
+        //private static Form form;
 
-        private readonly NotifyIcon trayIcon;
+        //private readonly NotifyIcon trayIcon;
         private readonly IPluginManager pluginManager;
         private readonly IPlayerStateHistoryRecorder playerStateRecorder;
         private readonly ISettingsProvider settingsProvider;
         private readonly IAutorunManager autorunManager;
-        private readonly IPathManager pathManager;
         private bool disposedValue = false; // To detect redundant calls
 
-        public TrayIconController(IPluginManager pluginManager, ISettingsProvider settingsProvider, IPlayerStateHistoryRecorder playerStateRecorder, IAutorunManager autorunManager, IPathManager pathManager)
+        public TrayIconController(IPluginManager pluginManager, ISettingsProvider settingsProvider, IPlayerStateHistoryRecorder playerStateRecorder, IAutorunManager autorunManager)
         {
-            trayIcon = CreateTrayIcon();
+            //trayIcon = CreateTrayIcon();
             this.pluginManager = pluginManager;
             this.playerStateRecorder = playerStateRecorder;
             this.settingsProvider = settingsProvider;
             this.autorunManager = autorunManager;
-            this.pathManager = pathManager;
         }
 
-        private NotifyIcon CreateTrayIcon()
-        {
-            var components = new Container();
-            var notifyIcon = new NotifyIcon(components)
-            {
-                ContextMenuStrip = CreateMenuStrip(),
-                Icon = Resources.EliteIcon,
-                Text = "Elite Log Agent",
-                Visible = true,
-            };
-            notifyIcon.BalloonTipClicked += (o, e) => OpenSettings();
-            notifyIcon.DoubleClick += (o, e) => OpenSettings();
-            return notifyIcon;
-        }
+        // private NotifyIcon CreateTrayIcon()
+        // {
+        //     var components = new Container();
+        //     var notifyIcon = new NotifyIcon(components)
+        //     {
+        //         ContextMenuStrip = CreateMenuStrip(),
+        //         Icon = Resources.EliteIcon,
+        //         Text = "Elite Log Agent",
+        //         Visible = true,
+        //     };
+        //     notifyIcon.BalloonTipClicked += (o, e) => OpenSettings();
+        //     notifyIcon.DoubleClick += (o, e) => OpenSettings();
+        //     return notifyIcon;
+        // }
 
-        private static ToolStripSeparator ToolStripSeparatorLeft => new ToolStripSeparator { Alignment = ToolStripItemAlignment.Left };
-
-        private ContextMenuStrip CreateMenuStrip()
-        {
-            var menuStrip = new ContextMenuStrip();
-            menuStrip.Items.Add(new ToolStripLabel($"Version: {AppInfo.Version}") { ForeColor = SystemColors.ControlDark });
-
-            menuStrip.Items.Add(ToolStripSeparatorLeft);
-            menuStrip.Items.Add("Settings", Resources.EliteIcon.ToBitmap(), (o, e) => OpenSettings());
-
-
-            menuStrip.Items.Add(ToolStripSeparatorLeft);
-            menuStrip.Items.Add("Browse logs", Resources.FinderIcon.ToBitmap(), (o, e) => OpenLogsDirectory());
-            menuStrip.Items.Add("Report issue", Resources.GitHub.ToBitmap(), (o, e) => OpenReportIssueLink());
-
-            menuStrip.Items.Add(ToolStripSeparatorLeft);
-            menuStrip.Items.Add("About", SystemIcons.Information.ToBitmap(), (o, e) => OpenAboutForm());
-            menuStrip.Items.Add("Changelog", Resources.GitHub.ToBitmap(), (o, e) => OpenChangelog());
-
-            menuStrip.Items.Add(ToolStripSeparatorLeft);
-            menuStrip.Items.Add("Exit", SystemIcons.Error.ToBitmap(), (o, e) => Application.Exit());
-
-            return menuStrip;
-        }
-
-        private void OpenLogsDirectory() => Process.Start(pathManager.LogDirectory);
-
-        private void OpenChangelog() => Process.Start(Resources.GitHubChangelogLink);
-
-        private void OpenAboutForm()
-        {
-            if (form != null)
-            {
-                form.BringToFront();
-                return;
-            }
-
-            try
-            {
-                using (form = new About())
-                    form.ShowDialog();
-            }
-            finally
-            {
-                form = null;
-            }
-        }
-
-        public void ShowErrorNotification(string error) => trayIcon.ShowBalloonTip(30000, "Elite Log Agent: Error", error, ToolTipIcon.Error);
-
-        public void OpenSettings()
-        {
-            if (form != null)
-            {
-                form.BringToFront();
-                return;
-            }
-
-            try
-            {
-                using (form = new SettingsForm()
-                {
-                    Plugins = pluginManager.LoadedPlugins.ToList(),
-                    Provider = settingsProvider,
-                    PlayerStateRecorder = playerStateRecorder,
-                    AutorunManager = autorunManager
-                })
-                {
-                    form.ShowDialog();
-                }
-            }
-            finally
-            {
-                form = null;
-            }
-        }
-
-        private void OpenReportIssueLink() => Process.Start(Resources.GitHubReportIssueLink);
+        // private static ToolStripSeparator ToolStripSeparatorLeft => new ToolStripSeparator { Alignment = ToolStripItemAlignment.Left };
+        //
+        // private ContextMenuStrip CreateMenuStrip()
+        // {
+        //     var menuStrip = new ContextMenuStrip();
+        //     menuStrip.Items.Add(new ToolStripLabel($"Version: {AppInfo.Version}") { ForeColor = SystemColors.ControlDark });
+        //
+        //     menuStrip.Items.Add(ToolStripSeparatorLeft);
+        //     menuStrip.Items.Add("Settings", Resources.EliteIcon.ToBitmap(), (o, e) => OpenSettings());
+        //     menuStrip.Items.Add("Report issue", Resources.GitHub.ToBitmap(), (o, e) => OpenReportIssueLink());
+        //
+        //     menuStrip.Items.Add(ToolStripSeparatorLeft);
+        //     menuStrip.Items.Add("About", SystemIcons.Information.ToBitmap(), (o, e) => OpenAboutForm());
+        //     menuStrip.Items.Add("Changelog", Resources.GitHub.ToBitmap(), (o, e) => OpenChangelog());
+        //
+        //     menuStrip.Items.Add(ToolStripSeparatorLeft);
+        //     menuStrip.Items.Add("Exit", SystemIcons.Error.ToBitmap(), (o, e) => Application.Exit());
+        //
+        //     return menuStrip;
+        // }
+        //
+        // private void OpenChangelog() => Process.Start(Resources.GitHubChangelogLink);
+        //
+        // private void OpenAboutForm()
+        // {
+        //     if (form != null)
+        //     {
+        //         form.BringToFront();
+        //         return;
+        //     }
+        //
+        //     try
+        //     {
+        //         using (form = new About())
+        //             form.ShowDialog();
+        //     }
+        //     finally
+        //     {
+        //         form = null;
+        //     }
+        // }
+        //
+        // public void ShowErrorNotification(string error) => trayIcon.ShowBalloonTip(30000, "Elite Log Agent: Error", error, ToolTipIcon.Error);
+        public void ShowErrorNotification(string error) {}
+        //
+        // public void OpenSettings()
+        // {
+        //     if (form != null)
+        //     {
+        //         form.BringToFront();
+        //         return;
+        //     }
+        //
+        //     try
+        //     {
+        //         using (form = new SettingsForm()
+        //         {
+        //             Plugins = pluginManager.LoadedPlugins.ToList(),
+        //             Provider = settingsProvider,
+        //             PlayerStateRecorder = playerStateRecorder,
+        //             AutorunManager = autorunManager
+        //         })
+        //         {
+        //             form.ShowDialog();
+        //         }
+        //     }
+        //     finally
+        //     {
+        //         form = null;
+        //     }
+        // }
+        //
+        // private void OpenReportIssueLink() => Process.Start(Resources.GitHubReportIssueLink);
 
         protected virtual void Dispose(bool disposing)
         {
@@ -132,7 +119,7 @@
             {
                 if (disposing)
                 {
-                    trayIcon?.Dispose();
+                    //trayIcon?.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

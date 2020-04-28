@@ -43,9 +43,10 @@
         }
 
         public IObserver<JournalEvent> GetLogObserver() => this;
-
-        //public AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => new EddnSettingsControl();
-
+#nullable enable
+        public AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => new EddnSettingsViewModel(PluginId);
+        public Type View => typeof(EddnSettingsControl);
+#nullable restore
         public void ReloadSettings() { /* EDDN has no configuration */ }
 
         public void OnCompleted()

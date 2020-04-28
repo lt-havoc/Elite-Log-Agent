@@ -29,6 +29,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Schemas\blackmarket-v1.0.json" />
     <None Remove="Schemas\commodity-v3.0.json" />
     <None Remove="Schemas\journal-v1.0.json" />
@@ -41,7 +49,7 @@
     <ProjectReference Include="..\DW.ELA.Utility\DW.ELA.Utility.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="Avalonia" Version="0.9.9" />
     <PackageReference Include="Namotion.Reflection" Version="1.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NJsonSchema" Version="10.0.24" />

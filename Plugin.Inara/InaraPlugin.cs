@@ -80,16 +80,12 @@
                 ApiKeys.TryRemove(key, out string _);
         }
 
+#nullable enable
+        public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => 
+            new MultiCmdrApiKeyViewModel(PluginId, GetActualApiKeys(), this, "https://inara.cz/settings-api/", settings, SaveSettings);
 
-        // public override AbstractSettingsControl GetPluginSettingsControl(GlobalSettings settings) => new MultiCmdrApiKeyControl()
-        // {
-        //     ApiKeys = GetActualApiKeys(),
-        //     ApiKeyValidator = this,
-        //     ApiSettingsLink = "https://inara.cz/settings-api/",
-        //     GlobalSettings = settings,
-        //     SaveSettingsFunc = SaveSettings
-        // };
-
+        public override Type View => MultiCmdrApiKeyControl.View;
+#nullable restore
         private void SaveSettings(GlobalSettings settings, IReadOnlyDictionary<string, string> values) =>
             new PluginSettingsFacade<InaraSettings>(PluginId).SetPluginSettings(settings, new InaraSettings() { ApiKeys = values.ToDictionary() });
 
