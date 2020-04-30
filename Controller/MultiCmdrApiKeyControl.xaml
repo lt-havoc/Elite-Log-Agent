@@ -4,8 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DW.ELA.Controller.MultiCmdrApiKeyControl">
-    <StackPanel>
-        <TextBlock Text="Welcome to Avalonia!" />
-        <TextBlock Text="{Binding Id}" />
-    </StackPanel>
+    <UserControl.Styles>
+        <Style Selector="Button.Hyperlink">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="-5"/>
+            <Setter Property="Foreground" Value="#0000EE" />
+            <!-- <Setter Property="Command" Value="{Binding OpenBrowser}" /> -->
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <!-- <Setter Property="TextDecorations" Value="Underline" /> TODO: Waiting for PR to be released. https://github.com/AvaloniaUI/Avalonia/pull/3438 -->
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto, Auto, *">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Classes="Hyperlink" Command="{Binding OpenBrowser}" CommandParameter="{Binding ApiSettingsLink}" Content="Get API Key" />
+            <Button Command="{Binding Validate}" Content="Validate API Keys" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 5 0 5">
+            <TextBox Text="{Binding CmdrName}" Watermark="CMDR Name" Width="100" />
+            <TextBox Text="{Binding ApiKey}" Watermark="Api Key" Width="150" Margin="5 0 5 0" />
+            <Button Command="{Binding AddKey}" Content="Add" />
+            <Button Command="{Binding RemoveKeys}" Content="Remove" />
+        </StackPanel>
+        <DataGrid Grid.Row="2" Name="ApiKeyGrid" IsReadOnly="True" SelectionChanged="ApiKeyGrid_SelectionChanged"  SelectionMode="Extended" Items="{Binding ApiKeys}" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CMDR" Binding="{Binding Commander}"/>
+                <DataGridTextColumn Header="Api Key" Binding="{Binding Key}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

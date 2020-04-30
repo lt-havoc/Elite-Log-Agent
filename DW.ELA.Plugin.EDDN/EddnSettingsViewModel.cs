@@ -4,6 +4,6 @@ namespace DW.ELA.Plugin.EDDN
 
     public class EddnSettingsViewModel : AbstractSettingsViewModel
     {
-        public EddnSettingsViewModel(string id) : base(id) { }
+        public EddnSettingsViewModel(string id) : base(id, null) { }
     }
 }

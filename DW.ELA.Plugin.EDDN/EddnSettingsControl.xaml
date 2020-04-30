@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DW.ELA.Plugin.EDDN.EddnSettingsControl">
-    Nothing to set up here! The data from the systems you visit will be automatically uploaded to EDDN and shared with trading sites (eddb.io, inara.cz, etc.)
-
-    This includes:
-    * Market data (commodities traded at station)
-    * Shipyard (ships sold at station)
-    * Outfitting (modules sold at station)
-    * Faction data in visited system
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap">
+            Nothing to set up here! The data from the systems you visit will be automatically uploaded to EDDN and shared with trading sites (eddb.io, inara.cz, etc.)
+        </TextBlock>
+        <TextBlock>
+            This includes:
+            * Market data (commodities traded at station)
+            * Shipyard (ships sold at station)
+            * Outfitting (modules sold at station)
+            * Faction data in visited system
+        </TextBlock>
+    </StackPanel>
 </UserControl>
