@@ -1,6 +1,7 @@
 namespace EliteLogAgent.ViewModels
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
     using DW.ELA.Interfaces;
@@ -15,12 +16,12 @@ namespace EliteLogAgent.ViewModels
         {
             this.settingsProvider = settingsProvider;
             currentSettings = settingsProvider.Settings.Clone();
-            SettingsControls = pluginManager.LoadedPlugins.Select(p => new KeyValuePair<string, AbstractSettingsViewModel>(p.PluginName, p.GetPluginSettingsViewModel(currentSettings)));
+            SettingsControls = new ObservableCollection<KeyValuePair<string, AbstractSettingsViewModel>>(pluginManager.LoadedPlugins.Select(p => new KeyValuePair<string, AbstractSettingsViewModel>(p.PluginName, p.GetPluginSettingsViewModel(currentSettings))));
             selectedPlugin = SettingsControls.First().Value;
             PropertyChanging += OnPropertyChanging;
         }
 
-        public IEnumerable<KeyValuePair<string, AbstractSettingsViewModel>> SettingsControls { get; }
+        public ObservableCollection<KeyValuePair<string, AbstractSettingsViewModel>> SettingsControls { get; }
 
         public KeyValuePair<string, AbstractSettingsViewModel> SelectedItem
         {
