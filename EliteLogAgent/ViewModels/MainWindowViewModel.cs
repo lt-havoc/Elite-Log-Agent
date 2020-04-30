@@ -35,8 +35,13 @@ namespace EliteLogAgent.ViewModels
             set => RaiseAndSetIfChanged(ref selectedPlugin, value);
         }
 
-        public void ApplyChanges() => settingsProvider.Settings = currentSettings;
-        
+        public void ApplyChanges()
+        {
+            SelectedPlugin.SaveSettings();
+            settingsProvider.Settings = currentSettings;
+        }
+
+
         private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedPlugin))
