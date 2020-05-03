@@ -6,6 +6,7 @@ namespace EliteLogAgent.ViewModels
     using System.Linq;
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Settings;
+    using DW.ELA.Utility;
 
     public class MainWindowViewModel : ViewModelBase
     {
@@ -19,6 +20,7 @@ namespace EliteLogAgent.ViewModels
             SettingsControls = new ObservableCollection<KeyValuePair<string, AbstractSettingsViewModel>>(pluginManager.LoadedPlugins.Select(p => new KeyValuePair<string, AbstractSettingsViewModel>(p.PluginName, p.GetPluginSettingsViewModel(currentSettings))));
             selectedPlugin = SettingsControls.First().Value;
             PropertyChanging += OnPropertyChanging;
+            Title = $"Elite Log Agent - Settings. Version: {AppInfo.Version}";
         }
 
         public ObservableCollection<KeyValuePair<string, AbstractSettingsViewModel>> SettingsControls { get; }
@@ -34,6 +36,8 @@ namespace EliteLogAgent.ViewModels
             get => selectedPlugin;
             set => RaiseAndSetIfChanged(ref selectedPlugin, value);
         }
+        
+        public string Title { get; }
 
         public void ApplyChanges()
         {

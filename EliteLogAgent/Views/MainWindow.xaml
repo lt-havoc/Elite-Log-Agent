@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="EliteLogAgent.Views.MainWindow"
-        Title="EliteLogAgent" Width="550" Height="300">
+        Title="{Binding Title}" Width="550" Height="300">
     <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto, 1.5*" Margin="5">
         <ListBox Items="{Binding SettingsControls}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" Margin="0 0 0 5" Grid.Row="0" Grid.Column="0">
             <ListBox.ItemTemplate>
