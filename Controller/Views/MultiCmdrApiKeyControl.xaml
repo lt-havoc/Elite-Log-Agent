@@ -33,7 +33,7 @@
             <Button Command="{Binding Validate}" Content="Validate" />
         </StackPanel>
         <ProgressBar Grid.Row="1" Height="3" MinHeight="3" IsIndeterminate="True" IsVisible="{Binding IsValidating}" />
-        <DataGrid Grid.Row="2" Name="ApiKeyGrid" Items="{Binding ApiKeys}" Margin="0 5 0 0" SelectionChanged="ApiKeyGrid_SelectionChanged" SelectionMode="Extended" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
+        <DataGrid Grid.Row="2" Name="ApiKeyGrid" Items="{Binding ApiKeys}" Margin="0 5 0 0" SelectionChanged="ApiKeyGrid_SelectionChanged" RowEditEnded="ApiKeyGrid_RowEditEnded" SelectionMode="Extended" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CMDR" Binding="{Binding Commander}" IsReadOnly="False" />
                 <DataGridTextColumn Header="Api Key" Binding="{Binding Key}" IsReadOnly="False"/>
