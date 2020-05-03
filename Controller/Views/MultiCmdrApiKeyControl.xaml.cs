@@ -4,6 +4,7 @@ namespace DW.ELA.Controller.Views
     using System;
     using System.Linq;
     using Avalonia.Controls;
+    using Avalonia.Interactivity;
     using Avalonia.Markup.Xaml;
     using Avalonia.VisualTree;
     using ViewModels;
@@ -30,9 +31,17 @@ namespace DW.ELA.Controller.Views
                 context.ApiKeyAdded += OnApiKeyAdded;                
         }
 
+        private void ApiKeyGrid_DoubleTapped(object sender, RoutedEventArgs e)
+        {
+            var dataGrid = (DataGrid)sender;
+            dataGrid.IsReadOnly = false;
+            dataGrid.BeginEdit();
+        }
+            
         private void ApiKeyGrid_RowEditEnded(object sender, DataGridRowEditEndedEventArgs e)
         {
             var dataGrid = this.FindControl<DataGrid>("ApiKeyGrid");
+            dataGrid.IsReadOnly = true;
             dataGrid.SelectedItem = null;
             
             // Current column isn't reset after editing a row. The first time adding a new row focuses the cmdr name
@@ -46,6 +55,7 @@ namespace DW.ELA.Controller.Views
         {
             var dataGrid = this.FindControl<DataGrid>("ApiKeyGrid");
             dataGrid.SelectedItem = e.ApiKeyViewModel;
+            dataGrid.IsReadOnly = false;
             dataGrid.BeginEdit();
             var visual = dataGrid.GetVisualDescendants().FirstOrDefault(v => v is DataGridCell c && c.Content is TextBox);
             
