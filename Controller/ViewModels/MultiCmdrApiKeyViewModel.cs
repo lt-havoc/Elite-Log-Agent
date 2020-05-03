@@ -1,6 +1,6 @@
 #nullable enable
 
-namespace DW.ELA.Controller
+namespace DW.ELA.Controller.ViewModels
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,16 @@ namespace DW.ELA.Controller
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Threading.Tasks;
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Settings;
-    
+
     public class MultiCmdrApiKeyViewModel : AbstractSettingsViewModel
     {
         private readonly IApiKeyValidator apiKeyValidator;
         private readonly Action<GlobalSettings?, IReadOnlyDictionary<string, string>>? saveSettings;
+        public event EventHandler<ApiKeyAddedEventArgs>? ApiKeyAdded;
+
 
         public MultiCmdrApiKeyViewModel(
             string id,
@@ -28,46 +31,66 @@ namespace DW.ELA.Controller
             this.apiKeyValidator = apiKeyValidator;
             this.saveSettings = saveSettings;
             ApiSettingsLink = apiSettingsLink;
-            ApiKeys = new ObservableCollection<ApiKey>(apiKeys.Select(kvp => new ApiKey(kvp.Key, kvp.Value)));
+            ApiKeys = new ObservableCollection<ApiKeyViewModel>(apiKeys.Select(kvp => new ApiKeyViewModel(kvp.Key, kvp.Value)));
         }
 
-        public ObservableCollection<ApiKey> ApiKeys { get; }
+        public ObservableCollection<ApiKeyViewModel> ApiKeys { get; }
         public string ApiSettingsLink { get; }
-        public IEnumerable<ApiKey>? SelectedItems { get; set; }
-        
-        private string cmdrName = "";
-        public string CmdrName
+        public IEnumerable<ApiKeyViewModel>? SelectedItems { get; set; }
+
+        private bool isValidating;
+        public bool IsValidating
         {
-            get => cmdrName;
-            set => RaiseAndSetIfChanged(ref cmdrName, value);
-        }
-        
-        private string apiKey = "";
-        public string ApiKey
-        {
-            get => apiKey;
-            set => RaiseAndSetIfChanged(ref apiKey, value);
+            get => isValidating;
+            set => RaiseAndSetIfChanged(ref isValidating, value);
         }
 
-        public override void SaveSettings() => saveSettings?.Invoke(GlobalSettings, ApiKeys.ToDictionary(key => key.Commander, key => key.Key));
-
-        public void AddKey()
+        public override void SaveSettings()
         {
-            if (string.IsNullOrWhiteSpace(CmdrName) || string.IsNullOrWhiteSpace(ApiKey))
-                return;
+            var invalidApiKeys = ApiKeys.Where(key => string.IsNullOrWhiteSpace(key.Commander) || string.IsNullOrWhiteSpace(key.Key)).ToArray();
+            var apiKeys = ApiKeys.Except(invalidApiKeys).ToDictionary(key => key.Commander, key => key.Key);
+
+            RemoveKeys(invalidApiKeys);
             
-            ApiKeys.Add(new ApiKey(CmdrName, ApiKey));
-            CmdrName = "";
-            ApiKey = "";
+            saveSettings?.Invoke(GlobalSettings, apiKeys);
         }
-        
-        public void RemoveKeys()
+
+        public void AddEmptyKey()
+        {
+            var key = ApiKeyViewModel.Empty();
+            ApiKeys.Add(key);
+            ApiKeyAdded?.Invoke(this, new ApiKeyAddedEventArgs(key));
+        }
+
+        public void RemoveSelectedKeys()
         {
             if (SelectedItems == null)
                 return;
             
             foreach (var kvp in SelectedItems)
                 ApiKeys.Remove(kvp);
+        }
+
+        public async Task Validate()
+        {
+            IsValidating = true;
+
+            var tasks = ApiKeys.Select(async key =>
+            {
+                if (string.IsNullOrWhiteSpace(key.Commander) || string.IsNullOrWhiteSpace(key.Key))
+                    key.Validity = ApiKeyValidity.Invalid;
+                else
+                {
+                    key.Validity = await apiKeyValidator.ValidateKeyAsync(key.Commander, key.Key)
+                        ? ApiKeyValidity.Valid
+                        : ApiKeyValidity.Invalid;
+                }
+
+                return key;
+            });
+            
+            await Task.WhenAll(tasks);
+            IsValidating = false;
         }
         
         public static void OpenBrowser(string url)
@@ -106,19 +129,11 @@ namespace DW.ELA.Controller
             if (waitForExit)
                 process.WaitForExit();
         }
-    }
 
-    public enum ApiKeyValidity { Valid, Invalid, Unknown }
-    public class ApiKey
-    {
-        public ApiKey(string commander, string key, ApiKeyValidity validity = ApiKeyValidity.Unknown)
+        private void RemoveKeys(IEnumerable<ApiKeyViewModel> keys)
         {
-            Commander = commander;
-            Key = key;
-            Validity = validity;
+            foreach (var key in keys)
+                ApiKeys.Remove(key);
         }
-        public string Commander { get; }
-        public string Key { get; }
-        public ApiKeyValidity Validity { get; }
     }
 }

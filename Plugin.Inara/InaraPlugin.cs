@@ -5,6 +5,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Controller.ViewModels;
+    using Controller.Views;
     using DW.ELA.Controller;
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Settings;
