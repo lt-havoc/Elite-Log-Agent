@@ -20,8 +20,15 @@ namespace EliteLogAgent
     {
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
         private readonly List<IDisposable> disposables = new List<IDisposable>();
-        
-        public override void Initialize() => AvaloniaXamlLoader.Load(this);
+
+        public override void Initialize()
+        {
+            AppDomain.CurrentDomain.ProcessExit += Shutdown;
+            // Since we handle the process exit event, we will also take care of shutting down
+            // the logger. This allows us to log in the exit event.
+            LogManager.AutoShutdown = false;
+            AvaloniaXamlLoader.Load(this);
+        }
 
         public override void OnFrameworkInitializationCompleted()
         {
@@ -32,7 +39,7 @@ namespace EliteLogAgent
                 var window = new MainWindow { DataContext = viewModel };
                 window.DataTemplates.Add(new PluginViewLocator(pluginManager.LoadedPlugins));
                 desktop.MainWindow = window;
-                desktop.Exit += OnExit;
+                desktop.Exit += Shutdown;
             }
             
             base.OnFrameworkInitializationCompleted();
@@ -72,12 +79,13 @@ namespace EliteLogAgent
             return (container.Resolve<MainWindowViewModel>(), pluginManager);
         }
 
-        private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+        private void Shutdown(object? sender, EventArgs e)
         {
             foreach (var disposable in disposables)
                 disposable.Dispose();
-            
+
             Log.Info("Shutting down");
+            LogManager.Shutdown();
         }
     }
 }
