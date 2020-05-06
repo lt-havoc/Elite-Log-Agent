@@ -1,9 +1,10 @@
 namespace DW.ELA.Plugin.EDDN
 {
     using Interfaces;
+    using Interfaces.Settings;
 
-    public class EddnSettingsViewModel : AbstractSettingsViewModel
+    public class EddnSettingsViewModel : AbstractPluginSettingsViewModel
     {
-        public EddnSettingsViewModel(string id) : base(id, null) { }
+        public EddnSettingsViewModel(string id) : base(id, GlobalSettings.Default) { }
     }
 }

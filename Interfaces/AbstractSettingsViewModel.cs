@@ -6,17 +6,15 @@ namespace DW.ELA.Interfaces
 
     public abstract class AbstractSettingsViewModel : ViewModelBase
     {
-        public AbstractSettingsViewModel(string id, GlobalSettings? globalSettings)
+        public AbstractSettingsViewModel(GlobalSettings globalSettings)
         {
-            Id = id;
             GlobalSettings = globalSettings;
         }
     
         /// <summary>
         /// Gets or sets reference to temporary instance of Settings existing in settings form
         /// </summary>
-        public GlobalSettings? GlobalSettings { get; set; }
-        public string Id { get; }
+        public GlobalSettings GlobalSettings { get; set; }
     
         public virtual void SaveSettings()
         {

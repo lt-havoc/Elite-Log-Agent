@@ -12,10 +12,10 @@ namespace DW.ELA.Controller.ViewModels
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Settings;
 
-    public class MultiCmdrApiKeyViewModel : AbstractSettingsViewModel
+    public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
     {
         private readonly IApiKeyValidator apiKeyValidator;
-        private readonly Action<GlobalSettings?, IReadOnlyDictionary<string, string>>? saveSettings;
+        private readonly Action<GlobalSettings, IReadOnlyDictionary<string, string>>? saveSettings;
         public event EventHandler<ApiKeyAddedEventArgs>? ApiKeyAdded;
 
 
@@ -25,7 +25,7 @@ namespace DW.ELA.Controller.ViewModels
             IApiKeyValidator apiKeyValidator,
             string apiSettingsLink,
             GlobalSettings settings,
-            Action<GlobalSettings?, IReadOnlyDictionary<string, string>>? saveSettings)
+            Action<GlobalSettings, IReadOnlyDictionary<string, string>>? saveSettings)
             : base(id, settings)
         {
             this.apiKeyValidator = apiKeyValidator;

@@ -1,5 +1,6 @@
 ﻿namespace EliteLogAgent
 {
+    using Autorun;
     using Castle.Facilities.Logging;
     using Castle.MicroKernel.Registration;
     using Castle.Services.Logging.NLogIntegration;
@@ -37,7 +38,8 @@
             //container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<TrayIconController>().LifestyleSingleton());
             container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<NoopUserNotificationService>().LifestyleSingleton());
 
-            // TODO: register autorun manager
+            // TODO: register autorun manager based on platform
+            container.Register(Component.For<IAutorunManager>().ImplementedBy<ExternalAutorunManager>().LifestyleTransient());
             // Different components will be used based on whether apps are portable
             // if (ApplicationDeployment.IsNetworkDeployed)
             //     container.Register(Component.For<IAutorunManager>().ImplementedBy<ClickOnceAutorunManager>().LifestyleTransient());

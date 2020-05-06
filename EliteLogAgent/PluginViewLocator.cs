@@ -21,7 +21,7 @@ namespace EliteLogAgent
         
         public IControl Build(object data)
         {
-            var viewModel = (AbstractSettingsViewModel)data;
+            var viewModel = (AbstractPluginSettingsViewModel)data;
             var plugin = plugins.SingleOrDefault(p => p.PluginId == viewModel.Id);
             var name = data.GetType().FullName ?? "Unknown view model";
 
@@ -41,6 +41,6 @@ namespace EliteLogAgent
             return new TextBlock { Text = $"Plugin view not found for {plugin?.PluginName ?? name}" };
         }
 
-        public bool Match(object data) => data is AbstractSettingsViewModel;
+        public bool Match(object data) => data is AbstractPluginSettingsViewModel;
     }
 }

@@ -38,6 +38,7 @@ namespace EliteLogAgent
             {
                 var window = new MainWindow { DataContext = viewModel };
                 window.DataTemplates.Add(new PluginViewLocator(pluginManager.LoadedPlugins));
+                window.DataTemplates.Add(new ViewLocator());
                 desktop.MainWindow = window;
                 desktop.Exit += Shutdown;
             }
