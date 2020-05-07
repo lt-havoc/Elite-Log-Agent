@@ -5,6 +5,7 @@ namespace EliteLogAgent
     using System.Linq;
     using System.Reactive.Disposables;
     using Avalonia;
+    using Avalonia.Controls;
     using Avalonia.Controls.ApplicationLifetimes;
     using Avalonia.Markup.Xaml;
     using Castle.Windsor;
@@ -39,6 +40,9 @@ namespace EliteLogAgent
                 var window = new MainWindow { DataContext = viewModel };
                 window.DataTemplates.Add(new PluginViewLocator(pluginManager.LoadedPlugins));
                 window.DataTemplates.Add(new ViewLocator());
+#if !DEBUG
+                window.Opened += (sender, args) => (sender as MainWindow)!.WindowState = WindowState.Minimized;
+#endif
                 desktop.MainWindow = window;
                 desktop.Exit += Shutdown;
             }
