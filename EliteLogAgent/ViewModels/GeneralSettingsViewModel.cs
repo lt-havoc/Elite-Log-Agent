@@ -1,5 +1,6 @@
 namespace EliteLogAgent.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using DW.ELA.Interfaces;
     using DW.ELA.Interfaces.Settings;
@@ -13,7 +14,16 @@ namespace EliteLogAgent.ViewModels
             : base(settings)
         {
             this.autorunManager = autorunManager;
-            logLevel = LogLevel.Info;
+
+            try
+            {
+                logLevel = LogLevel.FromString(settings.LogLevel ?? "Info");
+            }
+            catch (ArgumentException)
+            {
+                logLevel = LogLevel.Info;
+            }
+            
             runOnStartup = autorunManager.AutorunEnabled;
             logToCloud = settings.ReportErrorsToCloud;
             saveGameDir = settings.SaveGameDirectory;
