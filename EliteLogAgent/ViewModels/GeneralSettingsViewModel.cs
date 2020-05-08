@@ -16,6 +16,7 @@ namespace EliteLogAgent.ViewModels
             logLevel = LogLevel.Info;
             runOnStartup = autorunManager.AutorunEnabled;
             logToCloud = settings.ReportErrorsToCloud;
+            saveGameDir = settings.SaveGameDirectory;
             ShowRunOnStartup = autorunManager.CanManage;
         }
 
@@ -52,6 +53,17 @@ namespace EliteLogAgent.ViewModels
             {
                 RaiseAndSetIfChanged(ref logLevel, value);
                 GlobalSettings.LogLevel = value.ToString();
+            }
+        }
+        
+        private string? saveGameDir;
+        public string? SaveGameDir
+        {
+            get => saveGameDir;
+            set
+            {
+                var dir = RaiseAndSetIfChanged(ref saveGameDir, value?.Trim());
+                GlobalSettings.SaveGameDirectory = dir == "" ? null : value;
             }
         }
     }

@@ -23,6 +23,9 @@
         [JsonProperty("reportErrorsToCloud")]
         public bool ReportErrorsToCloud { get; set; } = true;
 
+        [JsonProperty("saveGameDirectory")]
+        public string SaveGameDirectory { get; set; } = null;
+
         object ICloneable.Clone() => Clone();
 
         public GlobalSettings Clone() => JsonConvert.DeserializeObject<GlobalSettings>(JsonConvert.SerializeObject(this));

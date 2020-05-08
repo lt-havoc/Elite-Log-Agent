@@ -27,9 +27,7 @@
 
             // Register core classes
             container.Register(
-                Component.For<ILogDirectoryNameProvider>().ImplementedBy<EnvironmentDirectoryNameProvider>().LifestyleSingleton(),
-                // TODO: Determine name provider based on OS
-                //Component.For<ILogDirectoryNameProvider>().ImplementedBy<SavedGamesDirectoryHelper>().LifestyleSingleton(),
+                Component.For<ILogDirectoryNameProvider>().ImplementedBy<SavedGamesDirectoryHelper>().LifestyleSingleton(),
                 Component.For<ILogRealTimeDataSource>().ImplementedBy<JournalMonitor>().LifestyleSingleton(),
                 Component.For<IPlayerStateHistoryRecorder>().ImplementedBy<PlayerStateRecorder>().LifestyleSingleton());
 

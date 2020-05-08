@@ -4,17 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="EliteLogAgent.Views.GeneralSettingsView">
-    <StackPanel>
-        <StackPanel.Styles>
-            <Style Selector="StackPanel > :is(Control)">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="Auto, *">
+        <Grid.Styles>
+            <Style Selector="Grid > CheckBox, Grid > ComboBox, Grid > TextBox">
                 <Setter Property="Margin" Value="0 0 0 5" />
             </Style>
-        </StackPanel.Styles>
-        <CheckBox IsChecked="{Binding RunOnStartup}" IsVisible="{Binding ShowRunOnStartup}">Autorun agent on sign-in</CheckBox>
-        <CheckBox IsChecked="{Binding LogToCloud}">Report errors to Cloud service</CheckBox>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Log Level" VerticalAlignment="Center" Margin="0 0 5 0" />
-            <ComboBox Items="{Binding LogLevels}" SelectedItem="{Binding LogLevel}" />
-        </StackPanel>
-    </StackPanel>
+            <Style Selector="Grid > TextBlock">
+                <Setter Property="Margin" Value="0 0 5 0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </Grid.Styles>
+        <TextBlock Text="Autorun agent on sign-in" IsVisible="{Binding ShowRunOnStartup}"  Grid.Row="0" Grid.Column="0" />
+        <CheckBox IsChecked="{Binding RunOnStartup}" IsVisible="{Binding ShowRunOnStartup}" Grid.Row="0" Grid.Column="1" />
+        
+        <TextBlock Text="Report errors to cloud service" Grid.Row="1" Grid.Column="0" />
+        <CheckBox IsChecked="{Binding LogToCloud}" Grid.Row="1" Grid.Column="1"/>
+        
+        <TextBlock Text="Log Level" Grid.Row="2" Grid.Column="0" />
+        <ComboBox Items="{Binding LogLevels}" SelectedItem="{Binding LogLevel}" Grid.Row="2" Grid.Column="1" />
+        
+        <TextBlock Text="Save Game Directory" Grid.Row="3" Grid.Column="0" />
+        <TextBox Text="{Binding SaveGameDir}" Watermark="Automatic" ToolTip.Tip="Leave blank to try and use default save game directory" Grid.Row="3" Grid.Column="1" />
+    </Grid>
 </UserControl>
