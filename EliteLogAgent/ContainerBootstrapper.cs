@@ -1,5 +1,6 @@
 ﻿namespace EliteLogAgent
 {
+    using System.Runtime.InteropServices;
     using Autorun;
     using Castle.Facilities.Logging;
     using Castle.MicroKernel.Registration;
@@ -9,9 +10,10 @@
     using DW.ELA.Interfaces;
     using DW.ELA.Utility;
     using EliteLogAgent.Deployment;
+    using Notification;
     using ViewModels;
 
-    internal static class ContainerBootstrapper
+    internal static partial class ContainerBootstrapper
     {
         internal static void Initalize(IWindsorContainer container)
         {
@@ -33,9 +35,13 @@
 
             // TODO: register avalonia based tray icon controller 
             // Register UI classes. Need to initalize before log to enable tray icon
-            //container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<TrayIconController>().LifestyleSingleton());
-            container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<NoopUserNotificationService>().LifestyleSingleton());
-
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<TrayIconController>().LifestyleSingleton());
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<FreeDesktopUserNotificationInterface>().LifestyleSingleton());
+            else
+                container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<NoopUserNotificationService>().LifestyleSingleton());
+            
             // TODO: register autorun manager based on platform
             container.Register(Component.For<IAutorunManager>().ImplementedBy<ExternalAutorunManager>().LifestyleTransient());
             // Different components will be used based on whether apps are portable
@@ -45,11 +51,6 @@
             //     container.Register(Component.For<IAutorunManager>().ImplementedBy<PortableAutorunManager>().LifestyleTransient());
 
             container.Register(Component.For<MainWindowViewModel>().ImplementedBy<MainWindowViewModel>().LifestyleTransient());
-        }
-        
-        private class NoopUserNotificationService : IUserNotificationInterface
-        {
-            public void ShowErrorNotification(string error) { }
         }
     }
 }

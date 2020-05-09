@@ -1,4 +1,4 @@
-﻿﻿namespace EliteLogAgent
+﻿﻿namespace EliteLogAgent.Notification
 {
     using System;
     using DW.ELA.Interfaces;
