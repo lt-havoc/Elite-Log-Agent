@@ -1,5 +1,6 @@
 ﻿namespace DW.ELA.UnitTests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -8,6 +9,7 @@
     using DW.ELA.Interfaces;
     using DW.ELA.LogModel;
     using DW.ELA.Utility.Json;
+    using Interfaces.Settings;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -42,7 +44,7 @@
         {
             get
             {
-                foreach (string file in Directory.EnumerateFiles(new SavedGamesDirectoryHelper().Directory, "JournalBeta.*.log"))
+                foreach (string file in Directory.EnumerateFiles(CreateSavedGameDirHelper().Directory, "JournalBeta.*.log"))
                 {
                     using (var fileReader = File.OpenRead(file))
                     using (var textReader = new StreamReader(fileReader))
@@ -61,7 +63,7 @@
         {
             get
             {
-                foreach (string file in Directory.EnumerateFiles(new SavedGamesDirectoryHelper().Directory, "Journal.*.log"))
+                foreach (string file in Directory.EnumerateFiles(CreateSavedGameDirHelper().Directory, "Journal.*.log"))
                 {
                     using (var fileReader = File.OpenRead(file))
                     using (var textReader = new StreamReader(fileReader))
@@ -81,9 +83,19 @@
             get
             {
                 var reader = new JournalFileReader();
-                foreach (string file in Directory.EnumerateFiles(new SavedGamesDirectoryHelper().Directory, "*.json"))
+                foreach (string file in Directory.EnumerateFiles(CreateSavedGameDirHelper().Directory, "*.json"))
                     yield return JObject.Parse(File.ReadAllText(file));
             }
+        }
+
+        private static ILogDirectoryNameProvider CreateSavedGameDirHelper() => new SavedGamesDirectoryHelper(new SettingsProviderStub());
+
+        private class SettingsProviderStub : ISettingsProvider
+        {
+#pragma warning disable 67
+            public event EventHandler SettingsChanged;
+#pragma warning restore
+            public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
         }
     }
 }

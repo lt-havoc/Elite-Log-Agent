@@ -9,6 +9,8 @@
     using DW.ELA.Plugin.Inara.Model;
     using DW.ELA.UnitTests.Utility;
     using DW.ELA.Utility;
+    using Interfaces;
+    using Interfaces.Settings;
     using NUnit.Framework;
 
     [TestFixture]
@@ -25,7 +27,7 @@
         [Explicit]
         public async Task IntegrationTestUploadToInara()
         {
-            var logEventSource = new JournalBurstPlayer(new SavedGamesDirectoryHelper().Directory, 5);
+            var logEventSource = new JournalBurstPlayer(new SavedGamesDirectoryHelper(new SettingsProviderStub()).Directory, 5);
             var logCounter = new JournalEventTypeCounter();
             var stateRecorder = new PlayerStateRecorder();
 
@@ -54,6 +56,14 @@
 
             CollectionAssert.IsEmpty(results);
             Assert.Pass("Uploaded {0} events", convertedEvents.Length);
+        }
+        
+        private class SettingsProviderStub : ISettingsProvider
+        {
+#pragma warning disable 67
+            public event EventHandler SettingsChanged;
+#pragma warning restore
+            public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
         }
     }
 }
