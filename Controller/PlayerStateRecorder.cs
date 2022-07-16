@@ -8,6 +8,7 @@ namespace DW.ELA.Controller
     using DW.ELA.Interfaces.Events;
     using MoreLinq;
     using NLog;
+    using NLog.Fluent;
 
     public class PlayerStateRecorder : IPlayerStateHistoryRecorder
     {

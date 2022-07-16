@@ -9,6 +9,7 @@ namespace DW.ELA.UnitTests
     using DW.ELA.Interfaces;
     using DW.ELA.LogModel;
     using DW.ELA.Utility.Json;
+    using Interfaces.Settings;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 

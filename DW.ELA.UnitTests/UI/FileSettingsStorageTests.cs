@@ -1,5 +1,4 @@
 using DW.ELA.UnitTests.Utility;
-using EliteLogAgent;
 using NUnit.Framework;
 
 namespace DW.ELA.UnitTests.UI
