@@ -25,7 +25,7 @@
 
         private readonly IPlayerStateHistoryRecorder playerStateRecorder;
         private readonly IUserNotificationInterface notificationInterface;
-        private readonly ConcurrentDictionary<string, string> ApiKeys = new ConcurrentDictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> ApiKeys = new();
 
         public InaraPlugin(IPlayerStateHistoryRecorder playerStateRecorder, ISettingsProvider settingsProvider, IRestClientFactory restClientFactory, IUserNotificationInterface notificationInterface)
             : base(settingsProvider)
@@ -44,8 +44,8 @@
 
         protected internal IRestClient RestClient { get; }
 
-        // Explicitly set to 30 as Inara prefers batches of events
-        protected override TimeSpan FlushInterval => TimeSpan.FromSeconds(30);
+        // Explicitly set to 60 as Inara prefers batches of events
+        protected override TimeSpan FlushInterval => TimeSpan.FromSeconds(60);
 
         /// <summary>
         /// Property which merges the 'new' API keys with multi-commander support with the old legacy single-commander one
@@ -54,17 +54,6 @@
         {
             var pluginSettings = SettingsFacade.GetPluginSettings(GlobalSettings);
             var config = pluginSettings.ApiKeys.ToDictionary();
-
-#pragma warning disable CS0618 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-            string legacyCmdrName = GlobalSettings.CommanderName;
-            string legacyApiKey = pluginSettings.ApiKey;
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            if (!string.IsNullOrEmpty(legacyCmdrName) && !string.IsNullOrEmpty(legacyApiKey) && !config.ContainsKey(legacyCmdrName))
-                config.Add(legacyCmdrName, legacyApiKey);
-
             return config;
         }
 
@@ -122,9 +111,15 @@
                         .Write();
                 }
             }
+            catch (RateLimitException)
+            {
+                notificationInterface.ShowErrorNotification($"Rate limit exceeded for {CurrentCommander?.Name}, ensure only one app uploads to INARA");
+                Log.Error().Message("Rate limit exceeded").Property("commander", CurrentCommander?.Name).Write();
+            }
             catch (InvalidApiKeyException)
             {
-                notificationInterface.ShowErrorNotification("Invalid EDSM API key for CMDR " + CurrentCommander?.Name);
+                notificationInterface.ShowErrorNotification($"Invalid EDSM API key for CMDR ${CurrentCommander?.Name}");
+                Log.Error().Message("Invalid INARA API key").Property("commander", CurrentCommander?.Name).Write();
             }
             catch (Exception e)
             {

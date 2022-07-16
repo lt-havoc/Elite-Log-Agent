@@ -1,4 +1,4 @@
-﻿﻿namespace EliteLogAgent
+namespace EliteLogAgent
 {
     using System;
     using System.Collections.Generic;

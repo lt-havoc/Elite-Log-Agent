@@ -1,4 +1,4 @@
-﻿namespace DW.ELA.Controller
+namespace DW.ELA.Controller
 {
     using System;
     using System.Collections.Concurrent;
@@ -13,12 +13,12 @@
     {
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
-        private readonly StateRecorder<ShipRecord> shipRecorder = new StateRecorder<ShipRecord>();
-        private readonly StateRecorder<string> starSystemRecorder = new StateRecorder<string>();
-        private readonly StateRecorder<string> stationRecorder = new StateRecorder<string>();
-        private readonly StateRecorder<bool> crewRecorder = new StateRecorder<bool>();
-        private readonly ConcurrentDictionary<string, double[]> systemCoordinates = new ConcurrentDictionary<string, double[]>();
-        private readonly ConcurrentDictionary<string, ulong> systemAddresses = new ConcurrentDictionary<string, ulong>();
+        private readonly StateRecorder<ShipRecord> shipRecorder = new();
+        private readonly StateRecorder<string> starSystemRecorder = new();
+        private readonly StateRecorder<string> stationRecorder = new();
+        private readonly StateRecorder<bool> crewRecorder = new();
+        private readonly ConcurrentDictionary<string, double[]> systemCoordinates = new();
+        private readonly ConcurrentDictionary<string, ulong> systemAddresses = new();
 
         public string GetPlayerSystem(DateTime atTime) => starSystemRecorder.GetStateAt(atTime);
 
@@ -50,17 +50,35 @@
             {
                 dynamic e = @event.Raw;
 
-                if (e.SystemAddress != null && e.StarSystem != null)
-                    systemAddresses.TryAdd((string)e.StarSystem, (ulong)e.SystemAddress);
+                if (e.SystemAddress != null && e.StarSystem != null && systemAddresses.TryAdd((string)e.StarSystem, (ulong)e.SystemAddress))
+                {
+                    Log.Info()
+                        .Message("SystemAddress update")
+                        .Property("StarSystem", e.StarSystem)
+                        .Property("SystemAddress", e.SystemAddress)
+                        .Write();
+                }
 
-                if (e.StarSystem != null)
-                    starSystemRecorder.RecordState((string)e.StarSystem, @event.Timestamp);
+                if (e.StarSystem != null && starSystemRecorder.RecordState((string)e.StarSystem, @event.Timestamp))
+                {
+                    Log.Info()
+                        .Message("StarSystem update")
+                        .Property("StarSystem", e.StarSystem)
+                        .Write();
+                }
 
                 if (e.StationName != null)
                     stationRecorder.RecordState((string)e.StationName, @event.Timestamp);
 
                 if (e.Ship != null && e.ShipID != null)
+                {
                     ProcessShipIDEvent((long?)e.ShipID, (string)e.Ship, @event.Timestamp);
+                    Log.Info()
+                        .Message("Ship update")
+                        .Property("ShipID", e.ShipID)
+                        .Property("Ship", e.Ship)
+                        .Write();
+                }
 
                 // Special cases
                 switch (@event)
@@ -113,26 +131,16 @@
 
             public string ShipType { get; }
 
-            public override bool Equals(object obj)
-            {
-                var record = obj as ShipRecord;
-                return record != null && ShipID == record.ShipID && ShipType == record.ShipType;
-            }
+            public override bool Equals(object obj) => obj is ShipRecord record && ShipID == record.ShipID && ShipType == record.ShipType;
 
-            public override int GetHashCode()
-            {
-                int hashCode = -1167275223;
-                hashCode = hashCode * -1521134295 + ShipID.GetHashCode();
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ShipType);
-                return hashCode;
-            }
+            public override int GetHashCode() => HashCode.Combine(ShipID, ShipType);
 
             public override string ToString() => $"{ShipType}-{ShipID}";
         }
 
         private class StateRecorder<T>
         {
-            private readonly SortedList<DateTime, T> stateRecording = new SortedList<DateTime, T>();
+            private readonly SortedList<DateTime, T> stateRecording = new();
 
             public T GetStateAt(DateTime atTime)
             {
@@ -142,10 +150,9 @@
                     {
                         return stateRecording
                             .Where(l => l.Key <= atTime)
-                            .DefaultIfEmpty()
                             .MaxBy(l => l.Key)
-                            .FirstOrDefault()
-                            .Value;
+                            .Select(l => l.Value)
+                            .FirstOrDefault();
                     }
                 }
                 catch (Exception e)
@@ -155,7 +162,7 @@
                 }
             }
 
-            public void RecordState(T state, DateTime at)
+            public bool RecordState(T state, DateTime at)
             {
                 try
                 {
@@ -163,13 +170,17 @@
                     {
                         var current = GetStateAt(at);
                         if (!Equals(current, state))
-                            stateRecording.Add(at, state);
+                        {
+                            stateRecording[at] = state;
+                            return true;
+                        }
                     }
                 }
                 catch (Exception e)
                 {
                     Log.Error(e);
                 }
+                return false;
             }
         }
     }

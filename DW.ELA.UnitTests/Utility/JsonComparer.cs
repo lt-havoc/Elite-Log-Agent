@@ -1,11 +1,11 @@
-﻿namespace DW.ELA.UnitTests.Utility
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using DW.ELA.Utility.Json;
-    using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DW.ELA.Utility.Json;
+using Newtonsoft.Json.Linq;
 
+namespace DW.ELA.UnitTests.Utility
+{
     public static class JsonComparer
     {
         public static IList<string> Compare(string tokenName, JObject source, JObject target)
@@ -33,9 +33,9 @@
             {
                 switch (t1)
                 {
-                    case JArray a:
+                    case JArray _:
                         return Compare(tokenName, t1 as JArray, t2 as JArray);
-                    case JObject o:
+                    case JObject _:
                         return Compare(tokenName, t1 as JObject, t2 as JObject);
                     default:
                         if (t1.ToString() != t2.ToString())

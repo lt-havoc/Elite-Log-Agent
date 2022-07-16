@@ -1,4 +1,4 @@
-﻿namespace DW.ELA.UnitTests.Controller
+namespace DW.ELA.UnitTests.Controller
 {
     using System;
     using DW.ELA.Controller;

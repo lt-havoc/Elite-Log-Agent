@@ -1,4 +1,4 @@
-﻿namespace DW.ELA.UnitTests
+namespace DW.ELA.UnitTests
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,6 @@
     using DW.ELA.Interfaces;
     using DW.ELA.LogModel;
     using DW.ELA.Utility.Json;
-    using Interfaces.Settings;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -28,14 +27,12 @@
                 var assembly = Assembly.GetExecutingAssembly();
                 string resourceName = "DW.ELA.UnitTests.CannedEvents.json";
 
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                using (var textReader = new StreamReader(stream))
-                using (var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false })
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                using var textReader = new StreamReader(stream);
+                using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
+                while (jsonReader.Read())
                 {
-                    while (jsonReader.Read())
-                    {
-                        yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
-                    }
+                    yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
                 }
             }
         }
@@ -46,14 +43,12 @@
             {
                 foreach (string file in Directory.EnumerateFiles(CreateSavedGameDirHelper().Directory, "JournalBeta.*.log"))
                 {
-                    using (var fileReader = File.OpenRead(file))
-                    using (var textReader = new StreamReader(fileReader))
-                    using (var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false })
+                    using var fileReader = File.OpenRead(file);
+                    using var textReader = new StreamReader(fileReader);
+                    using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
+                    while (jsonReader.Read())
                     {
-                        while (jsonReader.Read())
-                        {
-                            yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
-                        }
+                        yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
                     }
                 }
             }
@@ -65,14 +60,12 @@
             {
                 foreach (string file in Directory.EnumerateFiles(CreateSavedGameDirHelper().Directory, "Journal.*.log"))
                 {
-                    using (var fileReader = File.OpenRead(file))
-                    using (var textReader = new StreamReader(fileReader))
-                    using (var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false })
+                    using var fileReader = File.OpenRead(file);
+                    using var textReader = new StreamReader(fileReader);
+                    using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
+                    while (jsonReader.Read())
                     {
-                        while (jsonReader.Read())
-                        {
-                            yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
-                        }
+                        yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
                     }
                 }
             }

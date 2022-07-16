@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 namespace DW.ELA.Controller
 {
     using System;

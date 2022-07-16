@@ -21,7 +21,7 @@
         private const string EdsmApiUrl = "https://www.edsm.net/api-journal-v1/";
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
         private readonly Task<HashSet<string>> ignoredEvents;
-        private readonly ConcurrentDictionary<string, string> ApiKeys = new ConcurrentDictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> ApiKeys = new();
         private readonly IUserNotificationInterface notificationInterface;
 
         public EdsmPlugin(ISettingsProvider settingsProvider, IPlayerStateHistoryRecorder playerStateRecorder, IRestClientFactory restClientFactory, IUserNotificationInterface notificationInterface)
@@ -53,17 +53,6 @@
         {
             var pluginSettings = SettingsFacade.GetPluginSettings(GlobalSettings);
             var config = pluginSettings.ApiKeys.ToDictionary();
-
-#pragma warning disable CS0618 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-            string legacyCmdrName = GlobalSettings.CommanderName;
-            string legacyApiKey = pluginSettings.ApiKey;
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            if (!string.IsNullOrEmpty(legacyCmdrName) && !string.IsNullOrEmpty(legacyApiKey) && !config.ContainsKey(legacyCmdrName))
-                config.Add(legacyCmdrName, legacyApiKey);
-
             return config;
         }
 

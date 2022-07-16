@@ -1,4 +1,4 @@
-﻿namespace EliteLogAgent.Deployment
+namespace EliteLogAgent.Deployment
 {
     using System;
     using System.IO;
@@ -7,9 +7,9 @@
     public class DataPathManager : IPathManager
     {
         // TODO: set based on deployment method
-        // public string SettingsDirectory => ApplicationDeployment.IsNetworkDeployed ? AppDataDirectory : LocalDirectory;
+        // public string SettingsDirectory => AppInfo.IsNetworkDeployed ? AppDataDirectory : LocalDirectory;
         //
-        // public string LogDirectory => ApplicationDeployment.IsNetworkDeployed ? Path.Combine(AppDataDirectory, "Log") : Path.Combine(LocalDirectory, "Log");
+        // public string LogDirectory => AppInfo.IsNetworkDeployed ? Path.Combine(AppDataDirectory, "Log") : Path.Combine(LocalDirectory, "Log");
         
         public string SettingsDirectory => LocalDirectory;
 

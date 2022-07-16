@@ -1,26 +1,12 @@
-﻿namespace DW.ELA.UnitTests
-{
-    using System;
-    using System.Collections.Generic;
-    using DW.ELA.Utility.Extensions;
-    using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using DW.ELA.Utility.Extensions;
+using NUnit.Framework;
 
+namespace DW.ELA.UnitTests
+{
     public class DictionaryExtensionsTests
     {
-        [Test]
-        public void GetOrDefaultShouldReturnValue()
-        {
-            string result = GetTestDictionary().GetValueOrDefault("A");
-            Assert.AreEqual("1", result);
-        }
-
-        [Test]
-        public void GetOrDefaultShouldReturnNull()
-        {
-            string result = GetTestDictionary().GetValueOrDefault("D");
-            Assert.IsNull(result);
-        }
-
         [Test]
         public void AddIfNotNullShouldAdd()
         {

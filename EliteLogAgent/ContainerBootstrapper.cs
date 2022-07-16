@@ -1,4 +1,4 @@
-﻿namespace EliteLogAgent
+namespace EliteLogAgent
 {
     using System.Runtime.InteropServices;
     using Autorun;
@@ -45,7 +45,7 @@
             // TODO: register autorun manager based on platform
             container.Register(Component.For<IAutorunManager>().ImplementedBy<ExternalAutorunManager>().LifestyleTransient());
             // Different components will be used based on whether apps are portable
-            // if (ApplicationDeployment.IsNetworkDeployed)
+            // if (AppInfo.IsNetworkDeployed)
             //     container.Register(Component.For<IAutorunManager>().ImplementedBy<ClickOnceAutorunManager>().LifestyleTransient());
             // else
             //     container.Register(Component.For<IAutorunManager>().ImplementedBy<PortableAutorunManager>().LifestyleTransient());

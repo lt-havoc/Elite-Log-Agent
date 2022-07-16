@@ -1,4 +1,4 @@
-﻿namespace DW.ELA.UnitTests.INARA
+namespace DW.ELA.UnitTests.INARA
 {
     using System;
     using System.Collections.Generic;

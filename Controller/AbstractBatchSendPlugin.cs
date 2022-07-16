@@ -1,21 +1,21 @@
-﻿namespace DW.ELA.Controller
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Timers;
-    using DW.ELA.Interfaces;
-    using DW.ELA.Interfaces.Events;
-    using DW.ELA.Interfaces.Settings;
-    using DW.ELA.Utility;
-    using NLog;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Timers;
+using DW.ELA.Interfaces;
+using DW.ELA.Interfaces.Events;
+using DW.ELA.Interfaces.Settings;
+using DW.ELA.Utility;
+using NLog;
 
+namespace DW.ELA.Controller
+{
     public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObserver<JournalEvent>, IDisposable
         where TSettings : class, new()
         where TEvent : class
     {
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-        private readonly Timer flushTimer = new Timer();
+        private readonly Timer flushTimer = new();
 
         protected AbstractBatchSendPlugin(ISettingsProvider settingsProvider)
         {
@@ -99,7 +99,11 @@
 
         public IObserver<JournalEvent> GetLogObserver() => this;
 
-        public void Dispose() => flushTimer.Dispose();
+        public void Dispose()
+        {
+            flushTimer.Dispose();
+            GC.SuppressFinalize(this);
+        }
 
         public class CommanderData
         {

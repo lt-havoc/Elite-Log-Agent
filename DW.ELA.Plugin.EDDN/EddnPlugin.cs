@@ -1,33 +1,28 @@
-﻿namespace DW.ELA.Plugin.EDDN
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using DW.ELA.Interfaces;
-    using DW.ELA.Interfaces.Events;
-    using DW.ELA.Interfaces.Settings;
-    using DW.ELA.Plugin.EDDN.Model;
-    using Newtonsoft.Json.Linq;
-    using NLog;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
+using DW.ELA.Interfaces;
+using DW.ELA.Interfaces.Events;
+using DW.ELA.Interfaces.Settings;
+using DW.ELA.Plugin.EDDN.Model;
+using Newtonsoft.Json.Linq;
+using NLog;
 
+namespace DW.ELA.Plugin.EDDN
+{
     public class EddnPlugin : IPlugin, IObserver<JournalEvent>
     {
         private const string EddnUrl = @"https://eddn.edcd.io:4430/upload/";
         private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-        private readonly IPlayerStateHistoryRecorder playerStateRecorder;
 
         private readonly IEddnApiFacade apiFacade;
         private readonly EddnEventConverter eventConverter;
-        private readonly EventSchemaValidator schemaManager = new EventSchemaValidator();
-        private readonly ConcurrentQueue<JObject> lastPushedEvents = new ConcurrentQueue<JObject>(); // stores last few events to check duplicates
-        private readonly ISettingsProvider settingsProvider;
+        private readonly ConcurrentQueue<JObject> lastPushedEvents = new(); // stores last few events to check duplicates
         private string CurrentCommanderName = "Unknown commander";
 
         public EddnPlugin(ISettingsProvider settingsProvider, IPlayerStateHistoryRecorder playerStateRecorder, IRestClientFactory restClientFactory)
         {
-            this.settingsProvider = settingsProvider ?? throw new ArgumentNullException(nameof(settingsProvider));
-            this.playerStateRecorder = playerStateRecorder ?? throw new ArgumentNullException(nameof(playerStateRecorder));
             eventConverter = new EddnEventConverter(playerStateRecorder);
             settingsProvider.SettingsChanged += (o, e) => ReloadSettings();
             apiFacade = new EddnApiFacade(restClientFactory.CreateRestClient(EddnUrl));

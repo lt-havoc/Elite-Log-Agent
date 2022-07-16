@@ -1,12 +1,12 @@
-﻿namespace DW.ELA.Utility.Json
-{
-    using System.Globalization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
+﻿using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
+namespace DW.ELA.Utility.Json
+{
     public static class Converter
     {
-        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings Settings = new()
         {
             Formatting = Formatting.Indented,
             MetadataPropertyHandling = MetadataPropertyHandling.Ignore,

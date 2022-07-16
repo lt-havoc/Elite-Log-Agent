@@ -8,14 +8,10 @@
     public class GlobalSettings : ICloneable
     {
         [JsonIgnore]
-        public static GlobalSettings Default => new GlobalSettings();
+        public static GlobalSettings Default => new();
 
         [JsonProperty("pluginSettings")]
         public IDictionary<string, JObject> PluginSettings { get; set; } = new Dictionary<string, JObject>();
-
-        [Obsolete("Retained for backward compatibility")]
-        [JsonProperty("commanderName")]
-        public string CommanderName { get; set; } = null;
 
         [JsonProperty("logLevel")]
         public string LogLevel { get; set; } = "Info";

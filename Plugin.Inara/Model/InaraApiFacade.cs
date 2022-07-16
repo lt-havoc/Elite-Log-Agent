@@ -1,15 +1,15 @@
-﻿namespace DW.ELA.Plugin.Inara.Model
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using DW.ELA.Interfaces;
-    using DW.ELA.Utility.Json;
-    using Newtonsoft.Json;
-    using NLog;
-    using NLog.Fluent;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DW.ELA.Interfaces;
+using DW.ELA.Utility.Json;
+using Newtonsoft.Json;
+using NLog;
+using NLog.Fluent;
 
+namespace DW.ELA.Plugin.Inara.Model
+{
     public class InaraApiFacade
     {
         private readonly IRestClient client;
@@ -40,7 +40,7 @@
         public async Task<ICollection<ApiOutputEvent>> ApiCall(params ApiInputEvent[] events)
         {
             if (events.Length == 0)
-                return new ApiOutputEvent[0];
+                return Array.Empty<ApiOutputEvent>();
 
             var inputData = new ApiInputBatch()
             {
@@ -82,10 +82,14 @@
             if (outputData.Header.EventStatus != 200)
             {
                 var errorText = outputData.Header.EventStatusText;
+
+                if (errorText.Contains("Too much requests"))
+                    throw new RateLimitException();
+
                 if (errorText == "Invalid API key.")
                     throw new InvalidApiKeyException();
-                else
-                    throw new AggregateException($"Error from API: {outputData.Header.EventStatusText}", exceptions.ToArray());
+
+                throw new AggregateException($"Error from API: {errorText}", exceptions.ToArray());
             }
             return outputData.Events;
         }

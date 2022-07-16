@@ -14,8 +14,8 @@
     public class ThrottlingRestClient : IRestClient
     {
         private readonly string baseUrl;
-        private readonly HttpClient client = new HttpClient();
-        private readonly object @lock = new object();
+        private readonly HttpClient client = new();
+        private readonly object @lock = new();
 
         private DateTime lastRequestTimestamp = DateTime.MinValue;
         private int requestCounter;
@@ -39,7 +39,7 @@
             using (new LoggingTimer("Making request to " + baseUrl))
             {
                 var response = await client.PostAsync(baseUrl, httpContent);
-                return await ThrowIfErrorCode(response).Content.ReadAsStringAsync();
+                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
             }
         }
 
@@ -54,7 +54,7 @@
             using (new LoggingTimer("Making request to " + baseUrl))
             {
                 var response = await client.PostAsync(baseUrl, httpContent);
-                return await ThrowIfErrorCode(response).Content.ReadAsStringAsync();
+                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
             }
         }
 
@@ -66,15 +66,8 @@
             using (new LoggingTimer("Making request to " + url))
             {
                 var response = await client.GetAsync(url);
-                return await ThrowIfErrorCode(response).Content.ReadAsStringAsync();
+                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
             }
-        }
-
-        private HttpResponseMessage ThrowIfErrorCode(HttpResponseMessage response)
-        {
-            if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException(response.ReasonPhrase);
-            return response;
         }
 
         private void ThrowIfQuotaExceeded()

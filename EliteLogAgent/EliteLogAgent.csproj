@@ -3,6 +3,12 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <PackageLicenseExpression>mit</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/DarkWanderer/Elite-Log-Agent</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DarkWanderer/Elite-Log-Agent</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Authors>CMDR John Kozak</Authors>
+    <PackageId>Elite Log Agent</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">

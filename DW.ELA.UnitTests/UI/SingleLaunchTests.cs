@@ -1,4 +1,4 @@
-﻿// namespace DW.ELA.UnitTests.UI
+// namespace DW.ELA.UnitTests.UI
 // {
 //     using System.Diagnostics;
 //     using System.Linq;

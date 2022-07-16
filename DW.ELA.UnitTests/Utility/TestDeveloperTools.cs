@@ -1,4 +1,4 @@
-﻿namespace DW.ELA.UnitTests.Utility
+namespace DW.ELA.UnitTests.Utility
 {
     using System;
     using System.Collections.Generic;
@@ -17,16 +17,16 @@
         /// Utility method for developer to get canned events from own logs
         /// </summary>
         [Test]
-        [Ignore("Developer tool")]
+        [Explicit("Developer tool")]
         public static void ToolPrepareCannedEvents()
         {
             var eventExamples = Enumerable.Empty<JObject>()
-                .Concat(TestEventSource.CannedEventsRaw)
-                .Concat(TestEventSource.LocalBetaEvents)
-                .Concat(TestEventSource.LocalEventsRaw)
-                .Concat(TestEventSource.LocalStaticEvents)
-                .ExtractSamples()
-                .ToHashSet();
+                                          .Concat(TestEventSource.CannedEventsRaw)
+                                          .Concat(TestEventSource.LocalBetaEvents)
+                                          .Concat(TestEventSource.LocalEventsRaw)
+                                          .Concat(TestEventSource.LocalStaticEvents)
+                                          .ExtractSamples()
+                                          .ToHashSet();
 
             string eventsString = string.Join("\n", eventExamples);
             Assert.IsNotEmpty(eventsString);

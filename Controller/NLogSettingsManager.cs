@@ -1,15 +1,16 @@
-﻿namespace DW.ELA.Controller
-{
-    using System;
-    using System.IO;
-    using System.Text;
-    using DW.ELA.Interfaces;
-    using DW.ELA.Utility;
-    using NLog;
-    using NLog.Layouts;
-    using NLog.Targets;
-    using NLog.Targets.Wrappers;
+﻿using System;
+using System.IO;
+using System.Text;
+using DW.ELA.Interfaces;
+using DW.ELA.Utility;
+using NLog;
+using NLog.Fluent;
+using NLog.Layouts;
+using NLog.Targets;
+using NLog.Targets.Wrappers;
 
+namespace DW.ELA.Controller
+{
     public class NLogSettingsManager : ILogSettingsBootstrapper
     {
         private const string DefaultLayout = "${longdate}|${level}|${logger}|${message} ${exception:format=ToString,StackTrace:innerFormat=ToString,StackTrace:maxInnerExceptionLevel=10}";
@@ -50,30 +51,10 @@
             config.LoggingRules.Add(new NLog.Config.LoggingRule("*", logLevel, fileTarget));
             config.LoggingRules.Add(new NLog.Config.LoggingRule("*", LogLevel.Debug, new DebuggerTarget() { Layout = DefaultLayout }));
 
-            if (settingsProvider?.Settings?.ReportErrorsToCloud ?? false)
-            {
-                var webCollector = new WebServiceTarget() { Protocol = WebServiceProtocol.JsonPost, Url = new Uri(CloudErrorReportingUrl) };
-                webCollector.Parameters.Add(new MethodCallParameter(string.Empty, GetCloudErrorLayout()));
-                var asyncWrapper = new AsyncTargetWrapper()
-                {
-                    OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
-                    WrappedTarget = webCollector,
-                    BatchSize = 1,
-                    QueueLimit = 10,
-                    FullBatchSizeWriteLimit = 10,
-                    TimeToSleepBetweenBatches = 0,
-                    Name = "CloudErrorTargetAsync"
-                };
-
-                config.LoggingRules.Add(new NLog.Config.LoggingRule("*", LogLevel.Error, asyncWrapper));
-                config.AddTarget(asyncWrapper);
-            }
-
             LogManager.Configuration = config;
-            Log.Info("Enabled logging with level {0}", logLevel);
+            Log.Info().Message("Logging enabled").Property("level", logLevel).Write();
         }
 
-#pragma warning disable SA1118 // Parameter must not span multiple lines
         private JsonLayout GetDefaultJsonLayout()
         {
             return new JsonLayout()
@@ -125,7 +106,6 @@
             layout.Attributes.Add(new JsonAttribute("@timestamp", "${date:format=o}"));
             return layout;
         }
-#pragma warning restore SA1118 // Parameter must not span multiple lines
 
         private Target CreateFileTarget()
         {
