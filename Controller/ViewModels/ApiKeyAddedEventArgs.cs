@@ -1,14 +1,13 @@
-namespace DW.ELA.Controller.ViewModels
+namespace DW.ELA.Controller.ViewModels;
+
+using System;
+
+public class ApiKeyAddedEventArgs : EventArgs
 {
-    using System;
+    public ApiKeyViewModel ApiKeyViewModel { get; }
 
-    public class ApiKeyAddedEventArgs : EventArgs
+    public ApiKeyAddedEventArgs(ApiKeyViewModel apiKeyViewModel)
     {
-        public ApiKeyViewModel ApiKeyViewModel { get; }
-
-        public ApiKeyAddedEventArgs(ApiKeyViewModel apiKeyViewModel)
-        {
-            ApiKeyViewModel = apiKeyViewModel;
-        }
+        ApiKeyViewModel = apiKeyViewModel;
     }
 }

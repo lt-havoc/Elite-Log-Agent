@@ -60,7 +60,8 @@ dotnet_style_readonly_field = true:suggestion
 dotnet_code_quality_unused_parameters = all:suggestion
 
 # Miscellaneous preferences
-csharp_using_directive_placement = inside_namespace:silent
+csharp_using_directive_placement = outside_namespace
+csharp_style_namespace_declarations = file_scoped:warning
 
 #### C# Coding Conventions ####
 
@@ -87,7 +88,7 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # Modifier preferences
-csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
+csharp_preferred_modifier_order = public, private, protected, internal, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, volatile, async
 
 # Code-block preferences
 csharp_prefer_braces = when_multiline:suggestion

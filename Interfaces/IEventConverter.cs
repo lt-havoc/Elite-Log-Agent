@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface IEventConverter<out TEvent>
+    where TEvent : class
 {
-    public interface IEventConverter<out TEvent>
-        where TEvent : class
-    {
-        IEnumerable<TEvent> Convert(JournalEvent @event);
-    }
+    IEnumerable<TEvent> Convert(JournalEvent @event);
 }

@@ -1,7 +1,6 @@
-﻿namespace DW.ELA.Interfaces
+﻿namespace DW.ELA.Interfaces;
+
+public interface IUserNotificationInterface
 {
-    public interface IUserNotificationInterface
-    {
-        void ShowErrorNotification(string error);
-    }
+    void ShowErrorNotification(string error);
 }

@@ -1,80 +1,79 @@
-namespace EliteLogAgent.ViewModels
+namespace EliteLogAgent.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using DW.ELA.Interfaces;
+using DW.ELA.Interfaces.Settings;
+using NLog;
+
+public class GeneralSettingsViewModel : AbstractSettingsViewModel
 {
-    using System;
-    using System.Collections.Generic;
-    using DW.ELA.Interfaces;
-    using DW.ELA.Interfaces.Settings;
-    using NLog;
+    private readonly IAutorunManager autorunManager;
 
-    public class GeneralSettingsViewModel : AbstractSettingsViewModel
+    public GeneralSettingsViewModel(GlobalSettings settings, IAutorunManager autorunManager)
+        : base(settings)
     {
-        private readonly IAutorunManager autorunManager;
+        this.autorunManager = autorunManager;
 
-        public GeneralSettingsViewModel(GlobalSettings settings, IAutorunManager autorunManager)
-            : base(settings)
+        try
         {
-            this.autorunManager = autorunManager;
-
-            try
-            {
-                logLevel = LogLevel.FromString(settings.LogLevel ?? "Info");
-            }
-            catch (ArgumentException)
-            {
-                logLevel = LogLevel.Info;
-            }
-            
-            runOnStartup = autorunManager.AutorunEnabled;
-            logToCloud = settings.ReportErrorsToCloud;
-            saveGameDir = settings.SaveGameDirectory;
-            ShowRunOnStartup = autorunManager.CanManage;
+            logLevel = LogLevel.FromString(settings.LogLevel ?? "Info");
+        }
+        catch (ArgumentException)
+        {
+            logLevel = LogLevel.Info;
         }
 
-        public IEnumerable<LogLevel> LogLevels => LogLevel.AllLevels;
-        public bool ShowRunOnStartup { get; }
-        
-        private bool runOnStartup;
-        public bool RunOnStartup
-        {
-            get => runOnStartup;
-            set
-            {
-                RaiseAndSetIfChanged(ref runOnStartup, value);
-                autorunManager.AutorunEnabled = value;
-            }
-        }
+        runOnStartup = autorunManager.AutorunEnabled;
+        logToCloud = settings.ReportErrorsToCloud;
+        saveGameDir = settings.SaveGameDirectory;
+        ShowRunOnStartup = autorunManager.CanManage;
+    }
 
-        private bool logToCloud;
-        public bool LogToCloud
-        {
-            get => logToCloud;
-            set
-            {
-                RaiseAndSetIfChanged(ref logToCloud, value);
-                GlobalSettings.ReportErrorsToCloud = value;
-            }
-        }
+    public IEnumerable<LogLevel> LogLevels => LogLevel.AllLevels;
+    public bool ShowRunOnStartup { get; }
 
-        private LogLevel logLevel;
-        public LogLevel LogLevel
+    private bool runOnStartup;
+    public bool RunOnStartup
+    {
+        get => runOnStartup;
+        set
         {
-            get => logLevel;
-            set
-            {
-                RaiseAndSetIfChanged(ref logLevel, value);
-                GlobalSettings.LogLevel = value.ToString();
-            }
+            RaiseAndSetIfChanged(ref runOnStartup, value);
+            autorunManager.AutorunEnabled = value;
         }
-        
-        private string? saveGameDir;
-        public string? SaveGameDir
+    }
+
+    private bool logToCloud;
+    public bool LogToCloud
+    {
+        get => logToCloud;
+        set
         {
-            get => saveGameDir;
-            set
-            {
-                var dir = RaiseAndSetIfChanged(ref saveGameDir, value?.Trim());
-                GlobalSettings.SaveGameDirectory = dir == "" ? null : value;
-            }
+            RaiseAndSetIfChanged(ref logToCloud, value);
+            GlobalSettings.ReportErrorsToCloud = value;
+        }
+    }
+
+    private LogLevel logLevel;
+    public LogLevel LogLevel
+    {
+        get => logLevel;
+        set
+        {
+            RaiseAndSetIfChanged(ref logLevel, value);
+            GlobalSettings.LogLevel = value.ToString();
+        }
+    }
+
+    private string? saveGameDir;
+    public string? SaveGameDir
+    {
+        get => saveGameDir;
+        set
+        {
+            var dir = RaiseAndSetIfChanged(ref saveGameDir, value?.Trim());
+            GlobalSettings.SaveGameDirectory = dir == "" ? null : value;
         }
     }
 }

@@ -1,21 +1,20 @@
 ﻿using System;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface IPlayerStateHistoryRecorder : IObserver<JournalEvent>
 {
-    public interface IPlayerStateHistoryRecorder : IObserver<JournalEvent>
-    {
-        long? GetPlayerShipId(DateTime atTime);
+    long? GetPlayerShipId(DateTime atTime);
 
-        string GetPlayerShipType(DateTime atTime);
+    string GetPlayerShipType(DateTime atTime);
 
-        string GetPlayerSystem(DateTime atTime);
+    string GetPlayerSystem(DateTime atTime);
 
-        string GetPlayerStation(DateTime timestamp);
+    string GetPlayerStation(DateTime timestamp);
 
-        bool GetPlayerIsInCrew(DateTime atTime);
+    bool GetPlayerIsInCrew(DateTime atTime);
 
-        double[] GetStarPos(string systemName);
+    double[] GetStarPos(string systemName);
 
-        ulong? GetSystemAddress(string systemName);
-    }
+    ulong? GetSystemAddress(string systemName);
 }

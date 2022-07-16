@@ -1,17 +1,16 @@
 ﻿#nullable enable
 
-namespace DW.ELA.Interfaces
-{
-    using DW.ELA.Interfaces.Settings;
+namespace DW.ELA.Interfaces;
 
-    public abstract class AbstractPluginSettingsViewModel : AbstractSettingsViewModel
+using DW.ELA.Interfaces.Settings;
+
+public abstract class AbstractPluginSettingsViewModel : AbstractSettingsViewModel
+{
+    public AbstractPluginSettingsViewModel(string id, GlobalSettings globalSettings)
+        : base(globalSettings)
     {
-        public AbstractPluginSettingsViewModel(string id, GlobalSettings globalSettings)
-            : base(globalSettings)
-        {
-            Id = id;
-        }
-        
-        public string Id { get; }
+        Id = id;
     }
+
+    public string Id { get; }
 }

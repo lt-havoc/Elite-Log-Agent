@@ -1,29 +1,28 @@
-﻿namespace DW.ELA.Interfaces.Settings
+﻿namespace DW.ELA.Interfaces.Settings;
+
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+public class GlobalSettings : ICloneable
 {
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    [JsonIgnore]
+    public static GlobalSettings Default => new();
 
-    public class GlobalSettings : ICloneable
-    {
-        [JsonIgnore]
-        public static GlobalSettings Default => new();
+    [JsonProperty("pluginSettings")]
+    public IDictionary<string, JObject> PluginSettings { get; set; } = new Dictionary<string, JObject>();
 
-        [JsonProperty("pluginSettings")]
-        public IDictionary<string, JObject> PluginSettings { get; set; } = new Dictionary<string, JObject>();
+    [JsonProperty("logLevel")]
+    public string LogLevel { get; set; } = "Info";
 
-        [JsonProperty("logLevel")]
-        public string LogLevel { get; set; } = "Info";
+    [JsonProperty("reportErrorsToCloud")]
+    public bool ReportErrorsToCloud { get; set; } = true;
 
-        [JsonProperty("reportErrorsToCloud")]
-        public bool ReportErrorsToCloud { get; set; } = true;
+    [JsonProperty("saveGameDirectory")]
+    public string SaveGameDirectory { get; set; } = null;
 
-        [JsonProperty("saveGameDirectory")]
-        public string SaveGameDirectory { get; set; } = null;
+    object ICloneable.Clone() => Clone();
 
-        object ICloneable.Clone() => Clone();
-
-        public GlobalSettings Clone() => JsonConvert.DeserializeObject<GlobalSettings>(JsonConvert.SerializeObject(this));
-    }
+    public GlobalSettings Clone() => JsonConvert.DeserializeObject<GlobalSettings>(JsonConvert.SerializeObject(this));
 }

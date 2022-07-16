@@ -1,7 +1,6 @@
-﻿namespace DW.ELA.Controller
+﻿namespace DW.ELA.Controller;
+
+public interface ILogSettingsBootstrapper
 {
-    public interface ILogSettingsBootstrapper
-    {
-        void Setup();
-    }
+    void Setup();
 }

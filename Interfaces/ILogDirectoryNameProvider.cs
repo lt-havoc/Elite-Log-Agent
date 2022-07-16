@@ -1,7 +1,6 @@
-﻿namespace DW.ELA.Interfaces
+﻿namespace DW.ELA.Interfaces;
+
+public interface ILogDirectoryNameProvider
 {
-    public interface ILogDirectoryNameProvider
-    {
-        string Directory { get; }
-    }
+    string Directory { get; }
 }

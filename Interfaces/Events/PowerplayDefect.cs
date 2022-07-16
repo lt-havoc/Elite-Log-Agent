@@ -1,14 +1,13 @@
 ﻿using DW.ELA.Interfaces;
 using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
-{
-    public class PowerplayDefect : JournalEvent
-    {
-        [JsonProperty]
-        public string FromPower { get; set; }
+namespace DW.ELA.Interfaces.Events;
 
-        [JsonProperty]
-        public string ToPower { get; set; }
-    }
+public class PowerplayDefect : JournalEvent
+{
+    [JsonProperty]
+    public string FromPower { get; set; }
+
+    [JsonProperty]
+    public string ToPower { get; set; }
 }

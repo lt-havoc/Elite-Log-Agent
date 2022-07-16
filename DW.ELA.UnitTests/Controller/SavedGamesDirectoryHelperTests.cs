@@ -1,26 +1,23 @@
-namespace DW.ELA.UnitTests.Controller
+namespace DW.ELA.UnitTests.Controller;
+
+using System;
+using DW.ELA.Controller;
+using Interfaces;
+using Interfaces.Settings;
+using NUnit.Framework;
+
+// TODO: run on Windows only
+[Explicit]
+public class SavedGamesDirectoryHelperTests
 {
-    using System;
-    using DW.ELA.Controller;
-    using Interfaces;
-    using Interfaces.Settings;
-    using NUnit.Framework;
+    [Test]
+    public void ShouldFindSavesDirectory() => Assert.IsNotEmpty(new SavedGamesDirectoryHelper(new SettingsProviderStub()).Directory);
 
-    // TODO: run on Windows only
-    [Explicit]
-    public class SavedGamesDirectoryHelperTests
+    private class SettingsProviderStub : ISettingsProvider
     {
-        [Test]
-        public void ShouldFindSavesDirectory() => Assert.IsNotEmpty(new SavedGamesDirectoryHelper(new SettingsProviderStub()).Directory);
-        
-        private class SettingsProviderStub : ISettingsProvider
-        {
 #pragma warning disable 67
-            public event EventHandler SettingsChanged;
+        public event EventHandler SettingsChanged;
 #pragma warning restore
-            public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
-        }
+        public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
     }
-
-    
 }

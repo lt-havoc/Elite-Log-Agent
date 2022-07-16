@@ -8,115 +8,114 @@ using DW.ELA.Interfaces.Settings;
 using DW.ELA.Utility;
 using NLog;
 
-namespace DW.ELA.Controller
+namespace DW.ELA.Controller;
+
+public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObserver<JournalEvent>, IDisposable
+    where TSettings : class, new()
+    where TEvent : class
 {
-    public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObserver<JournalEvent>, IDisposable
-        where TSettings : class, new()
-        where TEvent : class
+    private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+    private readonly Timer flushTimer = new();
+
+    protected AbstractBatchSendPlugin(ISettingsProvider settingsProvider)
     {
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-        private readonly Timer flushTimer = new();
+        SettingsProvider = settingsProvider ?? throw new ArgumentNullException(nameof(settingsProvider));
+        flushTimer.AutoReset = false;
+        flushTimer.Interval = FlushInterval.TotalMilliseconds;
+        flushTimer.Start();
+        flushTimer.Elapsed += (o, e) => FlushQueue();
+        SettingsFacade = new PluginSettingsFacade<TSettings>(PluginId);
+    }
 
-        protected AbstractBatchSendPlugin(ISettingsProvider settingsProvider)
-        {
-            SettingsProvider = settingsProvider ?? throw new ArgumentNullException(nameof(settingsProvider));
-            flushTimer.AutoReset = false;
-            flushTimer.Interval = FlushInterval.TotalMilliseconds;
-            flushTimer.Start();
-            flushTimer.Elapsed += (o, e) => FlushQueue();
-            SettingsFacade = new PluginSettingsFacade<TSettings>(PluginId);
-        }
+    public abstract string PluginName { get; }
 
-        public abstract string PluginName { get; }
+    public abstract string PluginId { get; }
 
-        public abstract string PluginId { get; }
+    protected CommanderData CurrentCommander { get; private set; }
 
-        protected CommanderData CurrentCommander { get; private set; }
+    protected PluginSettingsFacade<TSettings> SettingsFacade { get; private set; }
 
-        protected PluginSettingsFacade<TSettings> SettingsFacade { get; private set; }
+    protected virtual TimeSpan FlushInterval => TimeSpan.FromSeconds(10);
 
-        protected virtual TimeSpan FlushInterval => TimeSpan.FromSeconds(10);
+    protected IEventConverter<TEvent> EventConverter { get; set; }
 
-        protected IEventConverter<TEvent> EventConverter { get; set; }
+    protected ISettingsProvider SettingsProvider { get; }
 
-        protected ISettingsProvider SettingsProvider { get; }
+    protected GlobalSettings GlobalSettings
+    {
+        get => SettingsProvider.Settings;
+        set => SettingsProvider.Settings = value;
+    }
 
-        protected GlobalSettings GlobalSettings
-        {
-            get => SettingsProvider.Settings;
-            set => SettingsProvider.Settings = value;
-        }
-
-        protected ConcurrentQueue<TEvent> EventQueue { get; } = new ConcurrentQueue<TEvent>();
+    protected ConcurrentQueue<TEvent> EventQueue { get; } = new ConcurrentQueue<TEvent>();
 #nullable enable
-        public abstract AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
+    public abstract AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
 
-        public abstract Type View { get; }
+    public abstract Type View { get; }
 #nullable restore
-        public abstract void FlushEvents(ICollection<TEvent> events);
+    public abstract void FlushEvents(ICollection<TEvent> events);
 
-        public abstract void ReloadSettings();
+    public abstract void ReloadSettings();
 
-        public void FlushQueue()
+    public void FlushQueue()
+    {
+        try
         {
-            try
-            {
-                var events = new List<TEvent>();
-                while (EventQueue.TryDequeue(out var @event))
-                    events.Add(@event);
-                if (events.Count > 0)
-                    FlushEvents(events);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Error while processing events");
-            }
-            finally
-            {
-                flushTimer.Start();
-            }
+            var events = new List<TEvent>();
+            while (EventQueue.TryDequeue(out var @event))
+                events.Add(@event);
+            if (events.Count > 0)
+                FlushEvents(events);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "Error while processing events");
+        }
+        finally
+        {
+            flushTimer.Start();
+        }
+    }
+
+    public virtual void OnNext(JournalEvent @event)
+    {
+        if (@event is Commander commanderEvent)
+        {
+            FlushQueue();
+            CurrentCommander = new CommanderData(commanderEvent.Name, commanderEvent.FrontierId);
         }
 
-        public virtual void OnNext(JournalEvent @event)
-        {
-            if (@event is Commander commanderEvent)
-            {
-                FlushQueue();
-                CurrentCommander = new CommanderData(commanderEvent.Name, commanderEvent.FrontierId);
-            }
+        foreach (var e in EventConverter.Convert(@event))
+            EventQueue.Enqueue(e);
+    }
 
-            foreach (var e in EventConverter.Convert(@event))
-                EventQueue.Enqueue(e);
+    public virtual void OnCompleted() => FlushQueue();
+
+    public virtual void OnSettingsChanged(object o, EventArgs e) => ReloadSettings();
+
+    public virtual void OnError(Exception error)
+    {
+    }
+
+    public IObserver<JournalEvent> GetLogObserver() => this;
+
+    public void Dispose()
+    {
+        flushTimer.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public class CommanderData
+    {
+        public readonly string Name;
+        public readonly string FrontierID;
+
+        public CommanderData(string commanderName, string commanderFid)
+        {
+            Name = commanderName;
+            FrontierID = commanderFid;
         }
 
-        public virtual void OnCompleted() => FlushQueue();
-
-        public virtual void OnSettingsChanged(object o, EventArgs e) => ReloadSettings();
-
-        public virtual void OnError(Exception error)
-        {
-        }
-
-        public IObserver<JournalEvent> GetLogObserver() => this;
-
-        public void Dispose()
-        {
-            flushTimer.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        public class CommanderData
-        {
-            public readonly string Name;
-            public readonly string FrontierID;
-
-            public CommanderData(string commanderName, string commanderFid)
-            {
-                Name = commanderName;
-                FrontierID = commanderFid;
-            }
-
-            public override string ToString() => $"{Name}|{FrontierID}";
-        }
+        public override string ToString() => $"{Name}|{FrontierID}";
     }
 }

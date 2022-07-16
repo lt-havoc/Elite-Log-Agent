@@ -1,37 +1,36 @@
-namespace EliteLogAgent
+namespace EliteLogAgent;
+
+using System;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using DW.ELA.Interfaces;
+using NLog;
+
+public class ViewLocator : IDataTemplate
 {
-    using System;
-    using Avalonia.Controls;
-    using Avalonia.Controls.Templates;
-    using DW.ELA.Interfaces;
-    using NLog;
+    private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+    public bool SupportsRecycling => false;
 
-    public class ViewLocator : IDataTemplate
+    public IControl Build(object data)
     {
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-        public bool SupportsRecycling => false;
+        var name = data.GetType().FullName!.Replace("ViewModel", "View");
+        var type = Type.GetType(name);
 
-        public IControl Build(object data)
+        if (type != null)
         {
-            var name = data.GetType().FullName!.Replace("ViewModel", "View");
-            var type = Type.GetType(name);
-
-            if (type != null)
+            try
             {
-                try
-                {
-                    if (Activator.CreateInstance(type) is Control view)
-                        return view;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e, $"Couldn't create instance of view '{type}'");
-                }
+                if (Activator.CreateInstance(type) is Control view)
+                    return view;
             }
-
-            return new TextBlock { Text = "View Not Found: " + name };
+            catch (Exception e)
+            {
+                Log.Error(e, $"Couldn't create instance of view '{type}'");
+            }
         }
 
-        public bool Match(object data) => data is ViewModelBase;
+        return new TextBlock { Text = "View Not Found: " + name };
     }
+
+    public bool Match(object data) => data is ViewModelBase;
 }

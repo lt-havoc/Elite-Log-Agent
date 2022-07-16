@@ -2,19 +2,18 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public class JournalEvent : IJournalEvent
 {
-    public class JournalEvent : IJournalEvent
-    {
-        [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
+    [JsonProperty("timestamp")]
+    public DateTime Timestamp { get; set; }
 
-        [JsonProperty("event")]
-        public string Event { get; set; }
+    [JsonProperty("event")]
+    public string Event { get; set; }
 
-        [JsonIgnore]
-        public JObject Raw { get; set; }
+    [JsonIgnore]
+    public JObject Raw { get; set; }
 
-        public override string ToString() => Event;
-    }
+    public override string ToString() => Event;
 }

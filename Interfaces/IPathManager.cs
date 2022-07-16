@@ -1,9 +1,8 @@
-﻿namespace DW.ELA.Interfaces
-{
-    public interface IPathManager
-    {
-        string SettingsDirectory { get; }
+﻿namespace DW.ELA.Interfaces;
 
-        string LogDirectory { get; }
-    }
+public interface IPathManager
+{
+    string SettingsDirectory { get; }
+
+    string LogDirectory { get; }
 }

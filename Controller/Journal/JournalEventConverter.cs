@@ -6,40 +6,39 @@ using DW.ELA.Interfaces;
 using DW.ELA.Interfaces.Events;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.LogModel
+namespace DW.ELA.LogModel;
+
+public static class JournalEventConverter
 {
-    public static class JournalEventConverter
+    private static readonly IReadOnlyDictionary<string, Type> eventTypes;
+
+    static JournalEventConverter()
     {
-        private static readonly IReadOnlyDictionary<string, Type> eventTypes;
+        var baseType = typeof(JournalEvent);
+        var exampleType = typeof(LoadGame);
 
-        static JournalEventConverter()
-        {
-            var baseType = typeof(JournalEvent);
-            var exampleType = typeof(LoadGame);
+        eventTypes = baseType
+           .Assembly
+           .GetTypes()
+           .Where(t => t.IsSubclassOf(baseType))
+           .ToDictionary(t => t.Name.ToLowerInvariant(), t => t);
+        Debug.Assert(eventTypes.Count > 0, "Must have events");
+        Debug.Assert(eventTypes.Values.Contains(exampleType), "Event LoadGame not loaded");
+    }
 
-            eventTypes = baseType
-               .Assembly
-               .GetTypes()
-               .Where(t => t.IsSubclassOf(baseType))
-               .ToDictionary(t => t.Name.ToLowerInvariant(), t => t);
-            Debug.Assert(eventTypes.Count > 0, "Must have events");
-            Debug.Assert(eventTypes.Values.Contains(exampleType), "Event LoadGame not loaded");
-        }
+    public static JournalEvent Convert(JObject jObject)
+    {
+        string eventName = jObject["event"]?.ToString()?.ToLowerInvariant();
+        JournalEvent result;
+        if (string.IsNullOrWhiteSpace(eventName))
+            throw new ArgumentException("Empty event name", nameof(jObject));
 
-        public static JournalEvent Convert(JObject jObject)
-        {
-            string eventName = jObject["event"]?.ToString()?.ToLowerInvariant();
-            JournalEvent result;
-            if (string.IsNullOrWhiteSpace(eventName))
-                throw new ArgumentException("Empty event name", nameof(jObject));
+        if (eventTypes.ContainsKey(eventName))
+            result = (JournalEvent)jObject.ToObject(eventTypes[eventName]);
+        else
+            result = jObject.ToObject<JournalEvent>();
 
-            if (eventTypes.ContainsKey(eventName))
-                result = (JournalEvent)jObject.ToObject(eventTypes[eventName]);
-            else
-                result = jObject.ToObject<JournalEvent>();
-
-            result.Raw = jObject;
-            return result;
-        }
+        result.Raw = jObject;
+        return result;
     }
 }

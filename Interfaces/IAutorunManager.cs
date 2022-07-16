@@ -1,8 +1,7 @@
-﻿namespace DW.ELA.Interfaces
+﻿namespace DW.ELA.Interfaces;
+
+public interface IAutorunManager
 {
-    public interface IAutorunManager
-    {
-        bool CanManage { get; }
-        bool AutorunEnabled { get; set; }
-    }
+    bool CanManage { get; }
+    bool AutorunEnabled { get; set; }
 }

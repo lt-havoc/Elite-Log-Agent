@@ -12,61 +12,60 @@ using NUnit.Framework;
 using MoreLinq;
 using DW.ELA.Interfaces.Events;
 
-namespace DW.ELA.UnitTests.Controller
+namespace DW.ELA.UnitTests.Controller;
+
+[TestFixture]
+public class JournalMonitorTests
 {
-    [TestFixture]
-    public class JournalMonitorTests
+    private static IEnumerable<string> EventsAsJson => TestEventSource.TypedLogEvents
+        .OfType<FsdJump>()
+        .Cast<JournalEvent>()
+        .Select(Serialize.ToJson);
+
+    private Task Delay => Task.Delay(50);
+
+    [Test]
+    public async Task ShouldPickUpEvents()
     {
-        private static IEnumerable<string> EventsAsJson => TestEventSource.TypedLogEvents
-            .OfType<FsdJump>()
-            .Cast<JournalEvent>()
-            .Select(Serialize.ToJson);
+        var directoryProvider = new TestDirectoryProvider();
+        var events = new ConcurrentBag<JournalEvent>();
+        CollectionAssert.IsEmpty(events);
 
-        private Task Delay => Task.Delay(50);
+        string testFile1 = Path.Combine(directoryProvider.Directory, "Journal.1234.log");
+        string testFile2 = Path.Combine(directoryProvider.Directory, "Journal.2345.log");
 
-        [Test]
-        public async Task ShouldPickUpEvents()
-        {
-            var directoryProvider = new TestDirectoryProvider();
-            var events = new ConcurrentBag<JournalEvent>();
-            CollectionAssert.IsEmpty(events);
+        File.WriteAllText(testFile1, EventsAsJson.ElementAt(0));
+        var journalMonitor = new JournalMonitor(directoryProvider, 5);
+        journalMonitor.Subscribe(events.Add);
 
-            string testFile1 = Path.Combine(directoryProvider.Directory, "Journal.1234.log");
-            string testFile2 = Path.Combine(directoryProvider.Directory, "Journal.2345.log");
+        File.AppendAllText(testFile1, EventsAsJson.ElementAt(1));
+        await Delay;
+        CollectionAssert.IsNotEmpty(events);
 
-            File.WriteAllText(testFile1, EventsAsJson.ElementAt(0));
-            var journalMonitor = new JournalMonitor(directoryProvider, 5);
-            journalMonitor.Subscribe(events.Add);
+        while (!events.IsEmpty)
+            events.TryTake(out var e);
 
-            File.AppendAllText(testFile1, EventsAsJson.ElementAt(1));
-            await Delay;
-            CollectionAssert.IsNotEmpty(events);
+        File.WriteAllText(testFile2, EventsAsJson.ElementAt(2));
+        await Delay;
+        CollectionAssert.IsNotEmpty(events);
 
-            while (!events.IsEmpty)
-                events.TryTake(out var e);
+        while (!events.IsEmpty)
+            events.TryTake(out var e);
 
-            File.WriteAllText(testFile2, EventsAsJson.ElementAt(2));
-            await Delay;
-            CollectionAssert.IsNotEmpty(events);
+        await Delay;
+        CollectionAssert.IsEmpty(events);
+    }
 
-            while (!events.IsEmpty)
-                events.TryTake(out var e);
+    [Test]
+    public void ShouldNotFailOnMissingDirectory()
+    {
+        var directoryProvider = new TestDirectoryProvider();
+        Directory.Delete(directoryProvider.Directory, true);
+        Assert.IsFalse(Directory.Exists(directoryProvider.Directory));
+        Assert.DoesNotThrow(() => new JournalMonitor(directoryProvider, 1));
 
-            await Delay;
-            CollectionAssert.IsEmpty(events);
-        }
-
-        [Test]
-        public void ShouldNotFailOnMissingDirectory()
-        {
-            var directoryProvider = new TestDirectoryProvider();
-            Directory.Delete(directoryProvider.Directory, true);
-            Assert.IsFalse(Directory.Exists(directoryProvider.Directory));
-            Assert.DoesNotThrow(() => new JournalMonitor(directoryProvider, 1));
-
-            // In current implementation, JournalMonitor creates the dir if missing
-            // Remove if implementation changes
-            Assert.IsTrue(Directory.Exists(directoryProvider.Directory));
-        }
+        // In current implementation, JournalMonitor creates the dir if missing
+        // Remove if implementation changes
+        Assert.IsTrue(Directory.Exists(directoryProvider.Directory));
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.Plugin.EDSM
+namespace DW.ELA.Plugin.EDSM;
+
+public interface IEdsmApiFacade
 {
-    public interface IEdsmApiFacade
-    {
-        Task PostLogEvents(JObject[] events);
-    }
+    Task PostLogEvents(JObject[] events);
 }

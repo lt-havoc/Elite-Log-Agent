@@ -1,18 +1,17 @@
-namespace DW.ELA.Plugin.EDDN
-{
-    using Avalonia.Controls;
-    using Avalonia.Markup.Xaml;
-    
-    public class EddnSettingsControl : UserControl
-    {
-        public EddnSettingsControl()
-        {
-            InitializeComponent();
-        }
+namespace DW.ELA.Plugin.EDDN;
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+
+public class EddnSettingsControl : UserControl
+{
+    public EddnSettingsControl()
+    {
+        InitializeComponent();
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface ILogHistoricDataSource : IEnumerable<JObject>
 {
-    public interface ILogHistoricDataSource : IEnumerable<JObject>
-    {
-    }
 }

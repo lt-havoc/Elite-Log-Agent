@@ -1,9 +1,8 @@
-﻿namespace DW.ELA.Interfaces.Events
-{
-    public struct FuelCapacity
-    {
-        public double Main { get; set; }
+﻿namespace DW.ELA.Interfaces.Events;
 
-        public double Reserve { get; set; }
-    }
+public struct FuelCapacity
+{
+    public double Main { get; set; }
+
+    public double Reserve { get; set; }
 }

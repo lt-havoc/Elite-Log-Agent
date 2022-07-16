@@ -2,16 +2,15 @@
 using DW.ELA.Utility.Json;
 using Newtonsoft.Json;
 
-namespace DW.ELA.Plugin.EDDN.Model
+namespace DW.ELA.Plugin.EDDN.Model;
+
+public class EddnEvent
 {
-    public class EddnEvent
-    {
-        [JsonProperty("$schemaRef")]
-        public virtual string SchemaRef { get; }
+    [JsonProperty("$schemaRef")]
+    public virtual string SchemaRef { get; }
 
-        [JsonProperty("header")]
-        public IDictionary<string, string> Header { get; set; }
+    [JsonProperty("header")]
+    public IDictionary<string, string> Header { get; set; }
 
-        public override string ToString() => Serialize.ToJson(this);
-    }
+    public override string ToString() => Serialize.ToJson(this);
 }

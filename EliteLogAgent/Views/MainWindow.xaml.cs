@@ -1,18 +1,17 @@
-namespace EliteLogAgent.Views
+namespace EliteLogAgent.Views;
+
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+
+public class MainWindow : Window
 {
-    using Avalonia.Controls;
-    using Avalonia.Markup.Xaml;
-
-    public class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 }
