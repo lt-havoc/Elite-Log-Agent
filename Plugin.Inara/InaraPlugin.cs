@@ -12,7 +12,7 @@
     using DW.ELA.Interfaces.Settings;
     using DW.ELA.Plugin.Inara.Model;
     using DW.ELA.Utility;
-    using MoreLinq;
+    using static MoreLinq.Extensions.ToDictionaryExtension;
     using NLog;
     using NLog.Fluent;
 
@@ -147,7 +147,7 @@
                 .GroupBy(e => e.EventName, e => e)
                 .ToDictionary(g => g.Key, g => g.ToArray());
             foreach (string type in LatestOnlyEvents.Intersect(eventsByType.Keys))
-                eventsByType[type] = new[] { eventsByType[type].MaxBy(e => e.Timestamp).FirstOrDefault() };
+                eventsByType[type] = new[] { eventsByType[type].DefaultIfEmpty().MaxBy(e => e.Timestamp) };
 
             // It does not make sense to e.g. add inventory materials if we already have a newer inventory snapshot
             foreach (string type in SupersedesEvents.Keys.Intersect(eventsByType.Keys))

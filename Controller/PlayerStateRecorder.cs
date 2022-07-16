@@ -149,9 +149,8 @@ namespace DW.ELA.Controller
                 {
                     lock (stateRecording)
                     {
-                        return stateRecording
-                            .Where(l => l.Key <= atTime)
-                            .MaxBy(l => l.Key)
+                        return
+                            MoreLinq.Extensions.MaxByExtension.MaxBy(stateRecording.Where(l => l.Key <= atTime), l => l.Key)
                             .Select(l => l.Value)
                             .FirstOrDefault();
                     }
