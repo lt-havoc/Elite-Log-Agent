@@ -34,6 +34,9 @@
                 </ControlTemplate>
             </Setter>
         </Style>
+        <Style Selector="Button.Hyperlink:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
     </UserControl.Styles>
     <Grid RowDefinitions="Auto, 3, *">
         <StackPanel Grid.Row="0" Margin="0 0 0 5" Orientation="Horizontal">
