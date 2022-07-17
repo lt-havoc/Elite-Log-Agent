@@ -55,7 +55,7 @@ public class JournalFileReader
 
     public JournalEvent? ReadFileEvent(string file)
     {
-        Log.Debug().Message("Reading file event").Property("file", file).Write();
+        Log.ForDebugEvent().Message("Reading file event").Property("file", file).Log();
         using var fileReader = OpenForSharedRead(file);
         using var textReader = new StreamReader(fileReader);
         return ReadEventsFromStream(textReader).SingleOrDefault();

@@ -92,32 +92,30 @@ public class InaraPlugin : AbstractBatchSendPlugin<ApiInputEvent, InaraSettings>
                 if (ApiInputs.Length > 0)
                     await facade.ApiCall(ApiInputs);
 
-                Log.Info()
-                    .LoggerName(Log.Name)
+                Log.ForInfoEvent()
                     .Message("Uploaded events")
                     .Property("eventsCount", events.Count)
                     .Property("commander", commander)
-                    .Write();
+                    .Log();
             }
             else
             {
-                Log.Info()
-                    .LoggerName(Log.Name)
+                Log.ForInfoEvent()
                     .Message("No INARA API key set for commander, events discarded")
                     .Property("eventsCount", events.Count)
                     .Property("commander", commander?.Name ?? "null")
-                    .Write();
+                    .Log();
             }
         }
         catch (RateLimitException)
         {
             notificationInterface.ShowErrorNotification($"Rate limit exceeded for {CurrentCommander?.Name}, ensure only one app uploads to INARA");
-            Log.Error().Message("Rate limit exceeded").Property("commander", CurrentCommander?.Name).Write();
+            Log.ForErrorEvent().Message("Rate limit exceeded").Property("commander", CurrentCommander?.Name).Log();
         }
         catch (InvalidApiKeyException)
         {
             notificationInterface.ShowErrorNotification($"Invalid EDSM API key for CMDR ${CurrentCommander?.Name}");
-            Log.Error().Message("Invalid INARA API key").Property("commander", CurrentCommander?.Name).Write();
+            Log.ForErrorEvent().Message("Invalid INARA API key").Property("commander", CurrentCommander?.Name).Log();
         }
         catch (Exception e)
         {

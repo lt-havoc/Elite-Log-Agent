@@ -16,7 +16,7 @@ namespace DW.ELA.UnitTests.Controller;
 public class LogEventConverterTests
 {
     private static IEnumerable<TestCaseData> RawTestCases => TestEventSource.CannedEventsRaw
-        .Select(jo => new TestCaseData(jo).SetArgDisplayNames(jo.Property("event")?.Value.ToString()));
+        .Select(jo => new TestCaseData(jo).SetArgDisplayNames(jo.Property("event")?.Value.ToString() ?? string.Empty));
 
     [Test]
     public void ShouldConvertFsdJumpEvent()

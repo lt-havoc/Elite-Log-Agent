@@ -57,10 +57,10 @@ public class App : Application
 
         // Setup logs
         container.Resolve<ILogSettingsBootstrapper>().Setup();
-        Log.Info()
+        Log.ForInfoEvent()
             .Message("Application started")
             .Property("version", AppInfo.Version)
-            .Write();
+            .Log();
 
         // Load plugins
         var pluginManager = container.Resolve<IPluginManager>();

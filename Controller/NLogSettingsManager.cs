@@ -52,7 +52,7 @@ public class NLogSettingsManager : ILogSettingsBootstrapper
         config.LoggingRules.Add(new NLog.Config.LoggingRule("*", LogLevel.Debug, new DebuggerTarget() { Layout = DefaultLayout }));
 
         LogManager.Configuration = config;
-        Log.Info().Message("Logging enabled").Property("level", logLevel).Write();
+        Log.ForInfoEvent().Message("Logging enabled").Property("level", logLevel).Log();
     }
 
     private JsonLayout GetDefaultJsonLayout()
@@ -93,7 +93,7 @@ public class NLogSettingsManager : ILogSettingsBootstrapper
                         false)
                 },
             RenderEmptyObject = false,
-            IncludeAllProperties = true,
+            IncludeEventProperties = true,
             ExcludeProperties = { "CallerFilePath", "CallerLineNumber", "CallerMemberName" }
         };
     }

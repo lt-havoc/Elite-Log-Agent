@@ -33,9 +33,9 @@ public class LoggingTimer : IDisposable
     public void Dispose()
     {
         stopwatch.Stop();
-        logger.Log(logLevel)
+        logger.ForLogEvent(logLevel)
             .Message("{0}", context)
             .Property("duration", stopwatch.ElapsedMilliseconds)
-            .Write();
+            .Log();
     }
 }

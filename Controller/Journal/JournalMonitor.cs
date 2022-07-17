@@ -61,7 +61,7 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
         filePosition = string.IsNullOrEmpty(currentFile) || EliteDangerous.IsRunning ? 0 : new FileInfo(currentFile).Length;
 
         fileWatcher.EnableRaisingEvents = true;
-        Log.Info().Message("Started monitoring").Property("directory", logDirectory).Write();
+        Log.ForInfoEvent().Message("Started monitoring").Property("directory", logDirectory).Log();
     }
 
     private void LogFlushTimer_Event(object? sender, ElapsedEventArgs e)
@@ -88,11 +88,11 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
         }
         catch (Exception e)
         {
-            Log.Error()
+            Log.ForErrorEvent()
                 .Message("Error while reading event file")
                 .Exception(e)
                 .Property("file", fullPath)
-                .Write();
+                .Log();
         }
     }
 
@@ -114,10 +114,10 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
                     if (latestFile == currentFile || latestFile == null)
                         return;
 
-                    Log.Info()
+                    Log.ForInfoEvent()
                         .Message("Switched to new file")
                         .Property("file", latestFile)
-                        .Write();
+                        .Log();
 
                     currentFile = latestFile;
                     filePosition = ReadJournalFromPosition(currentFile, 0);
@@ -125,20 +125,20 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
             }
             catch (FileNotFoundException e)
             {
-                Log.Error()
+                Log.ForErrorEvent()
                     .Message("Journal file not found")
                     .Exception(e)
                     .Property("file", currentFile)
-                    .Write();
+                    .Log();
                 currentFile = null;
             }
             catch (Exception e)
             {
-                Log.Error()
+                Log.ForErrorEvent()
                     .Message("Error while reading journal file")
                     .Exception(e)
                     .Property("file", currentFile)
-                    .Write();
+                    .Log();
             }
         }
     }
@@ -162,12 +162,12 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
         }
         catch (Exception e)
         {
-            Log.Error()
+            Log.ForErrorEvent()
                 .Message("Error while reading journal file")
                 .Exception(e)
                 .Property("file", currentFile)
                 .Property("position", fileReader.Position)
-                .Write();
+                .Log();
             textReader.ReadLine(); // read to end of current line, to skip 'bad' data
         }
         return fileReader.Position;

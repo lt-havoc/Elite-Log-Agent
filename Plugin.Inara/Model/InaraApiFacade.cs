@@ -69,12 +69,11 @@ public class InaraApiFacade
 
                     exceptions.Add(new ApplicationException(statusText ?? "Unknown Error"));
 
-                    Log.Error().Message(statusText)
+                    Log.ForErrorEvent().Message(statusText)
                         .Property("input", inputData.Events[i].ToString())
                         .Property("output", outputEvent.ToString())
                         .Property("status", statusCode)
-                        .LoggerName(Log.Name)
-                        .Write();
+                        .Log();
                 }
             }
         }

@@ -192,11 +192,11 @@ public class EddnEventConverter
 
         if (Log.IsTraceEnabled)
         {
-            Log.Trace()
+            Log.ForTraceEvent()
                 .Message("Converted message")
                 .Property("source", Serialize.ToJson(e))
                 .Property("output", Serialize.ToJson(@event))
-                .Write();
+                .Log();
         }
 
         yield return @event;

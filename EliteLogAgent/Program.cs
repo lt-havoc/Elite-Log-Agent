@@ -2,7 +2,6 @@ namespace EliteLogAgent;
 
 using System;
 using Avalonia;
-using Avalonia.Logging.Serilog;
 using NLog;
 
 class Program
@@ -25,7 +24,7 @@ class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .LogToDebug();
+            .LogToTrace();
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {

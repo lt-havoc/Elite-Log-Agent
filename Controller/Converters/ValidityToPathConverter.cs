@@ -8,7 +8,7 @@ using ViewModels;
 
 public class ValidityToPathConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value != null && Enum.TryParse(value.ToString(), out ApiKeyValidity validity))
         {
@@ -30,5 +30,5 @@ public class ValidityToPathConverter : IValueConverter
         throw new ArgumentOutOfRangeException(nameof(value));
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotSupportedException();
 }

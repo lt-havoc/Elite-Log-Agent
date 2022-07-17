@@ -91,20 +91,19 @@ public class EdsmPlugin : AbstractBatchSendPlugin<JObject, EdsmSettings>, IApiKe
                 foreach (var batch in apiEventsBatches)
                     await apiFacade.PostLogEvents(batch.ToArray());
 
-                Log.Info()
+                Log.ForInfoEvent()
                     .Message("Uploaded events")
                     .Property("eventsCount", events.Count)
                     .Property("commander", commander)
-                    .Write();
+                    .Log();
             }
             else
             {
-                Log.Info()
-                    .LoggerName(Log.Name)
+                Log.ForInfoEvent()
                     .Message("No EDSM API key set for commander, events discarded")
                     .Property("eventsCount", events.Count)
                     .Property("commander", commander?.Name ?? "null")
-                    .Write();
+                    .Log();
             }
         }
         catch (InvalidApiKeyException)

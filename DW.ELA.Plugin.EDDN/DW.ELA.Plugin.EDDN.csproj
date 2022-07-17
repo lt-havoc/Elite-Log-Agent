@@ -27,11 +27,11 @@
     <ProjectReference Include="..\DW.ELA.Utility\DW.ELA.Utility.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.12" />
-    <PackageReference Include="Namotion.Reflection" Version="1.0.14" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NJsonSchema" Version="10.3.1" />
-    <PackageReference Include="NLog" Version="4.7.5" />
+    <PackageReference Include="Avalonia" Version="0.10.16" />
+    <PackageReference Include="Namotion.Reflection" Version="2.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NJsonSchema" Version="10.7.2" />
+    <PackageReference Include="NLog" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Schemas\blackmarket-v1.0.json" />

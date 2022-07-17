@@ -24,5 +24,5 @@ public class GlobalSettings : ICloneable
 
     object ICloneable.Clone() => Clone();
 
-    public GlobalSettings Clone() => JsonConvert.DeserializeObject<GlobalSettings>(JsonConvert.SerializeObject(this));
+    public GlobalSettings Clone() => JsonConvert.DeserializeObject<GlobalSettings>(JsonConvert.SerializeObject(this)) ?? throw new InvalidOperationException($"Cannot clone null {nameof(GlobalSettings)}");
 }

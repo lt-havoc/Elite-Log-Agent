@@ -26,10 +26,10 @@ public class EddnApiFacade : IEddnApiFacade
             string result = await restClient.PostAsync(eventData);
             if (result != "OK")
             {
-                Log.Error()
+                Log.ForErrorEvent()
                     .Message(result)
                     .Property("input", eventData)
-                    .Write();
+                    .Log();
             }
             else
             {
@@ -38,11 +38,11 @@ public class EddnApiFacade : IEddnApiFacade
         }
         catch (Exception e)
         {
-            Log.Error()
+            Log.ForErrorEvent()
                 .Message("Error pushing event")
                 .Exception(e)
                 .Property("input", eventData)
-                .Write();
+                .Log();
         }
     }
 }
