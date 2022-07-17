@@ -1,7 +1,8 @@
-namespace EliteLogAgent.Views;
-
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+
+namespace EliteLogAgent.Views;
 
 public class MainWindow : Window
 {
@@ -12,6 +13,9 @@ public class MainWindow : Window
 
     private void InitializeComponent()
     {
+#if DEBUG
+        this.AttachDevTools();
+#endif
         AvaloniaXamlLoader.Load(this);
     }
 }
