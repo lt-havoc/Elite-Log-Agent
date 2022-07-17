@@ -12,12 +12,27 @@
     <UserControl.Styles>
         <Style Selector="Button.Hyperlink">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Margin" Value="-5"/>
             <Setter Property="Foreground" Value="#0000EE" />
             <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Cursor" Value="Hand" />
-            <!-- <Setter Property="TextDecorations" Value="Underline" /> TODO: Waiting for PR to be released. https://github.com/AvaloniaUI/Avalonia/pull/3438 -->
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter Content="{TemplateBinding Content}">
+                        <ContentPresenter.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="{TemplateBinding Foreground}"/>
+                                <Setter Property="FontSize" Value="{TemplateBinding FontSize}"/>
+                                <Setter Property="TextDecorations">
+                                    <TextDecorationCollection>
+                                        <TextDecoration Location="Underline" StrokeOffsetUnit="Pixel" StrokeOffset="2" />
+                                    </TextDecorationCollection>
+                                </Setter>
+                            </Style>
+                        </ContentPresenter.Styles>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter>
         </Style>
     </UserControl.Styles>
     <Grid RowDefinitions="Auto, 3, *">
