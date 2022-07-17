@@ -30,5 +30,5 @@ public class DictionaryExtensionsTests
         Assert.Throws<ArgumentException>(() => dictionary.AddIfNotNull("C", "4"));
     }
 
-    private IDictionary<string, string> GetTestDictionary() => new Dictionary<string, string> { { "A", "1" }, { "B", null }, { "C", "3" } };
+    private IDictionary<string, string?> GetTestDictionary() => new Dictionary<string, string?> { { "A", "1" }, { "B", null }, { "C", "3" } };
 }

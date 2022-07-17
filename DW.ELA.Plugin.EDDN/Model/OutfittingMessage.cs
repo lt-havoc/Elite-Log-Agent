@@ -9,13 +9,13 @@ internal partial class OutfittingMessage
     public long MarketId { get; set; }
 
     [JsonProperty("modules")]
-    public string[] Modules { get; set; }
+    public required string[] Modules { get; set; }
 
     [JsonProperty("stationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonProperty("systemName")]
-    public string SystemName { get; set; }
+    public required string SystemName { get; set; }
 
     [JsonProperty("timestamp")]
     public DateTime Timestamp { get; set; }

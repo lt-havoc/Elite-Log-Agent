@@ -1,10 +1,16 @@
-﻿using DW.ELA.Utility.Json;
+﻿using System;
+using DW.ELA.Utility.Json;
 using Newtonsoft.Json;
 
 namespace DW.ELA.Plugin.Inara.Model;
 
 public sealed class ApiOutputEvent
 {
+    public ApiOutputEvent(object eventData)
+    {
+        EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
+    }
+
     [JsonProperty("eventData")]
     public object EventData { get; internal set; }
 
@@ -18,7 +24,7 @@ public sealed class ApiOutputEvent
     /// Gets error codes as returned by API
     /// </summary>
     [JsonProperty("eventStatusText")]
-    public string EventStatusText { get; internal set; }
+    public string? EventStatusText { get; internal set; }
 
     public override string ToString() => Serialize.ToJson(this);
 

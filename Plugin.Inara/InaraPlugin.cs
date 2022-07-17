@@ -28,12 +28,11 @@ public class InaraPlugin : AbstractBatchSendPlugin<ApiInputEvent, InaraSettings>
     private readonly ConcurrentDictionary<string, string> ApiKeys = new();
 
     public InaraPlugin(IPlayerStateHistoryRecorder playerStateRecorder, ISettingsProvider settingsProvider, IRestClientFactory restClientFactory, IUserNotificationInterface notificationInterface)
-        : base(settingsProvider)
+        : base(settingsProvider, new InaraEventConverter(playerStateRecorder))
     {
         RestClient = restClientFactory.CreateRestClient(InaraApiUrl);
         this.playerStateRecorder = playerStateRecorder;
         this.notificationInterface = notificationInterface;
-        EventConverter = new InaraEventConverter(this.playerStateRecorder);
         settingsProvider.SettingsChanged += (o, e) => ReloadSettings();
         ReloadSettings();
     }
@@ -71,12 +70,11 @@ public class InaraPlugin : AbstractBatchSendPlugin<ApiInputEvent, InaraSettings>
             ApiKeys.TryRemove(key, out string _);
     }
 
-#nullable enable
     public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) =>
         new MultiCmdrApiKeyViewModel(PluginId, GetActualApiKeys(), this, "https://inara.cz/settings-api/", settings, SaveSettings);
 
     public override Type View => MultiCmdrApiKeyControl.View;
-#nullable restore
+
     private void SaveSettings(GlobalSettings settings, IReadOnlyDictionary<string, string> values) =>
         new PluginSettingsFacade<InaraSettings>(PluginId).SetPluginSettings(settings, new InaraSettings() { ApiKeys = values.ToDictionary() });
 
@@ -87,7 +85,7 @@ public class InaraPlugin : AbstractBatchSendPlugin<ApiInputEvent, InaraSettings>
         try
         {
             var commander = CurrentCommander;
-            if (commander != null && ApiKeys.TryGetValue(commander.Name, out string apiKey))
+            if (commander != null && ApiKeys.TryGetValue(commander.Name, out string? apiKey))
             {
                 var facade = new InaraApiFacade(RestClient, commander.Name, apiKey, commander.FrontierID);
                 var ApiInputs = Compact(events).ToArray();
@@ -147,7 +145,10 @@ public class InaraPlugin : AbstractBatchSendPlugin<ApiInputEvent, InaraSettings>
             .GroupBy(e => e.EventName, e => e)
             .ToDictionary(g => g.Key, g => g.ToArray());
         foreach (string type in LatestOnlyEvents.Intersect(eventsByType.Keys))
-            eventsByType[type] = new[] { eventsByType[type].DefaultIfEmpty().MaxBy(e => e.Timestamp) };
+        {
+            var apiInputEvent = eventsByType[type].MaxBy(e => e.Timestamp);
+            eventsByType[type] = apiInputEvent is null ? Array.Empty<ApiInputEvent>() : new[] { apiInputEvent };
+        }
 
         // It does not make sense to e.g. add inventory materials if we already have a newer inventory snapshot
         foreach (string type in SupersedesEvents.Keys.Intersect(eventsByType.Keys))

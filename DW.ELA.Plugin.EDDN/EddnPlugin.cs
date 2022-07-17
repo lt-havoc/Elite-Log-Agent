@@ -38,10 +38,9 @@ public class EddnPlugin : IPlugin, IObserver<JournalEvent>
     }
 
     public IObserver<JournalEvent> GetLogObserver() => this;
-#nullable enable
     public AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => new EddnSettingsViewModel(PluginId);
     public Type View => typeof(EddnSettingsControl);
-#nullable restore
+
     public void ReloadSettings() { /* EDDN has no configuration */ }
 
     public void OnCompleted()
@@ -91,7 +90,7 @@ public class EddnPlugin : IPlugin, IObserver<JournalEvent>
     {
         try
         {
-            JObject jObject;
+            JObject? jObject;
             // Housekeep queue to hold it at approximate max size
             while (lastPushedEvents.Count > 30)
                 lastPushedEvents.TryDequeue(out jObject);

@@ -6,5 +6,5 @@ namespace DW.ELA.Interfaces.Events;
 public class PowerplayLeave : JournalEvent
 {
     [JsonProperty]
-    public string Power { get; set; }
+    public required string Power { get; set; }
 }

@@ -6,8 +6,8 @@ namespace DW.ELA.Interfaces.Events;
 public class PowerplayDefect : JournalEvent
 {
     [JsonProperty]
-    public string FromPower { get; set; }
+    public required string FromPower { get; set; }
 
     [JsonProperty]
-    public string ToPower { get; set; }
+    public required string ToPower { get; set; }
 }

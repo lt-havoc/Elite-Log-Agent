@@ -28,15 +28,15 @@ public static class JournalEventConverter
 
     public static JournalEvent Convert(JObject jObject)
     {
-        string eventName = jObject["event"]?.ToString()?.ToLowerInvariant();
+        string? eventName = jObject["event"]?.ToString()?.ToLowerInvariant();
         JournalEvent result;
         if (string.IsNullOrWhiteSpace(eventName))
             throw new ArgumentException("Empty event name", nameof(jObject));
 
         if (eventTypes.ContainsKey(eventName))
-            result = (JournalEvent)jObject.ToObject(eventTypes[eventName]);
+            result = (JournalEvent?)jObject.ToObject(eventTypes[eventName]) ?? throw new InvalidOperationException("Journal event cannot be null");
         else
-            result = jObject.ToObject<JournalEvent>();
+            result = jObject.ToObject<JournalEvent>() ?? throw new InvalidOperationException("Journal event cannot be null");
 
         result.Raw = jObject;
         return result;

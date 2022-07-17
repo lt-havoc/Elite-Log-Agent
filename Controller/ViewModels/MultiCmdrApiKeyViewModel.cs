@@ -1,4 +1,3 @@
-#nullable enable
 
 namespace DW.ELA.Controller.ViewModels;
 
@@ -127,7 +126,7 @@ public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
             WindowStyle = ProcessWindowStyle.Hidden
         });
         if (waitForExit)
-            process.WaitForExit();
+            process?.WaitForExit();
     }
 
     private void RemoveKeys(IEnumerable<ApiKeyViewModel> keys)

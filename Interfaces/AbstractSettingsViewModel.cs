@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace DW.ELA.Interfaces;
+﻿namespace DW.ELA.Interfaces;
 
 using DW.ELA.Interfaces.Settings;
 

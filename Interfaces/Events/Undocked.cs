@@ -5,10 +5,10 @@ namespace DW.ELA.Interfaces.Events;
 public class Undocked : JournalEvent
 {
     [JsonProperty("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonProperty("StationType")]
-    public string StationType { get; set; }
+    public required string StationType { get; set; }
 
     [JsonProperty("MarketID")]
     public long MarketId { get; set; }

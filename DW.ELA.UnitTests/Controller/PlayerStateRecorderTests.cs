@@ -36,9 +36,9 @@ public class PlayerStateRecorderTests
         var time3 = time2.AddSeconds(5);
         var time4 = time3.AddSeconds(5);
 
-        var e1 = new LoadGame() { Timestamp = time1, Ship = ValidShip, ShipId = ValidShipId };
-        var e2 = new LoadGame() { Timestamp = time2, Ship = "Some_Fighter", ShipId = 567 };
-        var e3 = new LoadGame() { Timestamp = time3, Ship = "testbuggy", ShipId = 123 };
+        var e1 = new LoadGame() { Timestamp = time1, Ship = ValidShip, ShipId = ValidShipId, Raw = null!, Event = null!, Commander = "", ShipName = "", ShipIdent = "", GameMode = "", FrontierId = "" };
+        var e2 = new LoadGame() { Timestamp = time2, Ship = "Some_Fighter", ShipId = 567, Raw = null!, Event = null!, Commander = "", ShipName = "", ShipIdent = "", GameMode = "", FrontierId = "" };
+        var e3 = new LoadGame() { Timestamp = time3, Ship = "testbuggy", ShipId = 123, Raw = null!, Event = null!, Commander = "", ShipName = "", ShipIdent = "", GameMode = "", FrontierId = "" };
         foreach (var e in new[] { e1, e2, e3 })
         {
             e.Raw = JObject.FromObject(e);

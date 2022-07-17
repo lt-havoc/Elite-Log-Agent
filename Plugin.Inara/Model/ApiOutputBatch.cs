@@ -6,6 +6,11 @@ namespace DW.ELA.Plugin.Inara.Model;
 
 internal struct ApiOutputBatch
 {
+    public ApiOutputBatch(Header header, IList<ApiOutputEvent> events)
+    {
+        Header = header;
+        Events = events;
+    }
     [JsonProperty("header")]
     public Header Header;
 

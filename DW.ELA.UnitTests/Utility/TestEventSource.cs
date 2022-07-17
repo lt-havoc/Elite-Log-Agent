@@ -28,12 +28,12 @@ public static class TestEventSource
             var assembly = Assembly.GetExecutingAssembly();
             string resourceName = "DW.ELA.UnitTests.CannedEvents.json";
 
-            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new InvalidOperationException($"Manifest resource '{resourceName}' cannot be null");
             using var textReader = new StreamReader(stream);
             using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
             while (jsonReader.Read())
             {
-                yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
+                yield return Converter.Serializer.Deserialize<JObject>(jsonReader) ?? throw new Exception($"Unable to deserialize resource '{resourceName}'");
             }
         }
     }
@@ -49,7 +49,7 @@ public static class TestEventSource
                 using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
                 while (jsonReader.Read())
                 {
-                    yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
+                    yield return Converter.Serializer.Deserialize<JObject>(jsonReader) ?? throw new Exception($"Unable to deserialize file '{file}'");
                 }
             }
         }
@@ -66,7 +66,7 @@ public static class TestEventSource
                 using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
                 while (jsonReader.Read())
                 {
-                    yield return Converter.Serializer.Deserialize<JObject>(jsonReader);
+                    yield return Converter.Serializer.Deserialize<JObject>(jsonReader) ?? throw new Exception($"Unable to deserialize file '{file}'");
                 }
             }
         }
@@ -87,7 +87,7 @@ public static class TestEventSource
     private class SettingsProviderStub : ISettingsProvider
     {
 #pragma warning disable 67
-        public event EventHandler SettingsChanged;
+        public event EventHandler? SettingsChanged;
 #pragma warning restore
         public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
     }

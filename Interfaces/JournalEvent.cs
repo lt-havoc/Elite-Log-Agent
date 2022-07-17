@@ -10,10 +10,10 @@ public class JournalEvent : IJournalEvent
     public DateTime Timestamp { get; set; }
 
     [JsonProperty("event")]
-    public string Event { get; set; }
+    public required string Event { get; set; }
 
     [JsonIgnore]
-    public JObject Raw { get; set; }
+    public required JObject Raw { get; set; }
 
     public override string ToString() => Event;
 }

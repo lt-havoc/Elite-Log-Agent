@@ -6,7 +6,7 @@ namespace DW.ELA.Interfaces.Events;
 public class SaaSignalsFound : JournalEvent
 {
     [JsonProperty("BodyName")]
-    public string BodyName { get; set; }
+    public required string BodyName { get; set; }
 
     [JsonProperty("SystemAddress")]
     public long? SystemAddress { get; set; }
@@ -15,17 +15,17 @@ public class SaaSignalsFound : JournalEvent
     public long? BodyId { get; set; }
 
     [JsonProperty("Signals")]
-    public Signal[] Signals { get; set; }
+    public required Signal[] Signals { get; set; }
 
     public class Signal
     {
         [JsonProperty("Type")]
-        public string Type { get; set; }
+        public required string Type { get; set; }
 
         [JsonProperty("Count")]
         public long Count { get; set; }
 
         [JsonProperty("Type_Localised", NullValueHandling = NullValueHandling.Ignore)]
-        public string TypeLocalised { get; set; }
+        public string? TypeLocalised { get; set; }
     }
 }

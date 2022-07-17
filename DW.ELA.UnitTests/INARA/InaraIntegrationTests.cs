@@ -61,7 +61,7 @@ public class InaraIntegrationTests
     private class SettingsProviderStub : ISettingsProvider
     {
 #pragma warning disable 67
-        public event EventHandler SettingsChanged;
+        public event EventHandler? SettingsChanged;
 #pragma warning restore
         public GlobalSettings Settings { get; set; } = GlobalSettings.Default;
     }

@@ -6,5 +6,5 @@ namespace DW.ELA.Interfaces.Events;
 public class EngineerProgress : JournalEvent
 {
     [JsonProperty("Engineers")]
-    public EngineerProgressRecord[] Engineers { get; set; }
+    public required EngineerProgressRecord[] Engineers { get; set; }
 }

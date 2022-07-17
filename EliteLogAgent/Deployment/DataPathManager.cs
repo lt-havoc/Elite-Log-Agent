@@ -17,5 +17,5 @@ public class DataPathManager : IPathManager
 
     private string AppDataDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EliteLogAgent");
 
-    private string LocalDirectory => Path.GetDirectoryName(new Uri(typeof(Program).Assembly.CodeBase!).LocalPath)!;
+    private string LocalDirectory => Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).LocalPath)!;
 }

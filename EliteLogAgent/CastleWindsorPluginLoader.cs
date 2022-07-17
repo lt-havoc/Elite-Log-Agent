@@ -27,7 +27,7 @@ internal class CastleWindsorPluginLoader : IPluginManager
 
     public IList<IPlugin> Plugins => container.ResolveAll<IPlugin>();
 
-    public IPlugin GetPluginById(string pluginId) => Plugins.SingleOrDefault(p => p.PluginId == pluginId);
+    public IPlugin? GetPluginById(string pluginId) => Plugins.SingleOrDefault(p => p.PluginId == pluginId);
 
     public void LoadPlugin(string pluginAssemblyName)
     {

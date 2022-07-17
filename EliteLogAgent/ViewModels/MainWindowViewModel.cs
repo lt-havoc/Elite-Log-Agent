@@ -52,7 +52,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
 
-    private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
+    private void OnPropertyChanging(object? sender, PropertyChangingEventArgs e)
     {
         if (e.PropertyName == nameof(SelectedViewModel))
             SelectedViewModel.SaveSettings();

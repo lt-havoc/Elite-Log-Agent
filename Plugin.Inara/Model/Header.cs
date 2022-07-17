@@ -5,7 +5,7 @@ namespace DW.ELA.Plugin.Inara.Model;
 
 public class Header
 {
-    public Header(string commander, string apiKey, string frontierID)
+    public Header(string commander, string apiKey, string? frontierID)
     {
         CommanderName = commander;
         ApiKey = apiKey;
@@ -29,14 +29,14 @@ public class Header
     public string CommanderName { get; }
 
     [JsonProperty("commanderFrontierID")]
-    public string FrontierID { get; }
+    public string? FrontierID { get; }
 
     // Output fields
     [JsonProperty("eventStatus")]
     public int? EventStatus { get; internal set; }
 
     [JsonProperty("eventStatusText")]
-    public string EventStatusText { get; internal set; }
+    public string? EventStatusText { get; internal set; }
 
     public override string ToString() => Serialize.ToJson(this);
 }

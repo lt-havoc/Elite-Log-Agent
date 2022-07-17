@@ -20,7 +20,7 @@ public class GlobalSettings : ICloneable
     public bool ReportErrorsToCloud { get; set; } = true;
 
     [JsonProperty("saveGameDirectory")]
-    public string SaveGameDirectory { get; set; } = null;
+    public string? SaveGameDirectory { get; set; } = null;
 
     object ICloneable.Clone() => Clone();
 

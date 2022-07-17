@@ -1,4 +1,3 @@
-#nullable enable
 namespace DW.ELA.Controller;
 
 using System;
@@ -63,7 +62,7 @@ public class SavedGamesDirectoryHelper : ILogDirectoryNameProvider
         throw new DirectoryNotFoundException("Failed to find the saved games directory.");
     }
 
-    private static string ExpandEnvVars(string name)
+    private static string? ExpandEnvVars(string? name)
     {
         if (string.IsNullOrEmpty(name))
             return name;

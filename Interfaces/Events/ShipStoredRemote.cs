@@ -8,16 +8,16 @@ public class ShipStoredRemote
     public long ShipId { get; set; }
 
     [JsonProperty("ShipType")]
-    public string ShipType { get; set; }
+    public required string ShipType { get; set; }
 
     [JsonProperty("ShipType_Localised")]
-    public string ShipTypeLocalised { get; set; }
+    public string? ShipTypeLocalised { get; set; }
 
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonProperty("ShipMarketID")]
     public long? ShipMarketId { get; set; }

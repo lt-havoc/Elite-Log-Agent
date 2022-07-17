@@ -5,5 +5,5 @@ namespace DW.ELA.Interfaces.Events;
 public class CommunityGoal : JournalEvent
 {
     [JsonProperty("CurrentGoals")]
-    public CommunityGoalRecord[] CurrentGoals { get; set; }
+    public required CommunityGoalRecord[] CurrentGoals { get; set; }
 }

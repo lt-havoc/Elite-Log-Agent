@@ -30,22 +30,30 @@ public class JournalFileReader
         using var jsonReader = new JsonTextReader(textReader) { SupportMultipleContent = true, CloseInput = false };
         while (jsonReader.Read())
         {
+            const string errorMessage = "Error deserializing event from journal";
             var @object = Converter.Serializer.Deserialize<JObject>(jsonReader);
-            JournalEvent @event = null;
-            try
+            JournalEvent? @event = null;
+            
+            if (@object is null)
+                Log.Error(errorMessage);
+            else
             {
-                @event = JournalEventConverter.Convert(@object);
+                try
+                {
+                    @event = JournalEventConverter.Convert(@object);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, errorMessage);
+                }
             }
-            catch (Exception e)
-            {
-                Log.Error(e, "Error deserializing event from journal");
-            }
+
             if (@event != null)
                 yield return @event;
         }
     }
 
-    public JournalEvent ReadFileEvent(string file)
+    public JournalEvent? ReadFileEvent(string file)
     {
         Log.Debug().Message("Reading file event").Property("file", file).Write();
         using var fileReader = OpenForSharedRead(file);

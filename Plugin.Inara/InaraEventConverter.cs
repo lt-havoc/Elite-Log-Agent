@@ -209,7 +209,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
             var @event = new ApiInputEvent("setCommanderShip")
             {
                 Timestamp = e.Timestamp,
-                EventData = new Dictionary<string, object>()
+                EventData = new Dictionary<string, object?>()
                 {
                     { "shipType", ship.ShipType },
                     { "shipGameID", ship.ShipId },
@@ -228,7 +228,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         yield return new ApiInputEvent("setCommanderShipTransfer")
         {
             Timestamp = e.Timestamp,
-            EventData = new Dictionary<string, object>()
+            EventData = new Dictionary<string, object?>()
             {
                 { "shipType", e.ShipType },
                 { "shipGameID", e.ShipId },
@@ -324,7 +324,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
             yield return new ApiInputEvent("setCommunityGoal")
             {
                 Timestamp = e.Timestamp,
-                EventData = new Dictionary<string, object>()
+                EventData = new Dictionary<string, object?>()
                 {
                     { "communitygoalGameID", goal.Cgid },
                     { "communitygoalName", goal.Title },
@@ -396,7 +396,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         var @event = new ApiInputEvent("setCommanderShip")
         {
             Timestamp = e.Timestamp,
-            EventData = new Dictionary<string, object>()
+            EventData = new Dictionary<string, object?>()
             {
                 { "shipType", e.StoreOldShip },
                 { "shipGameID", e.StoreShipId },
@@ -412,7 +412,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         @event = new ApiInputEvent("setCommanderShip")
         {
             Timestamp = e.Timestamp,
-            EventData = new Dictionary<string, object>()
+            EventData = new Dictionary<string, object?>()
             {
                 { "shipType", e.ShipType },
                 { "shipGameID", e.ShipId },
@@ -461,7 +461,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         };
         if (!string.IsNullOrEmpty(item.EngineerModifications))
         {
-            var value = new Dictionary<string, object>()
+            var value = new Dictionary<string, object?>()
             {
                 { "blueprintName", item.EngineerModifications },
                 { "blueprintLevel", item.Level },
@@ -501,7 +501,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
 
     private IEnumerable<ApiInputEvent> ConvertEvent(MissionCompleted e)
     {
-        var data = new Dictionary<string, object>()
+        var data = new Dictionary<string, object?>()
         {
                 { "missionGameID", e.MissionId },
                 { "missionName", e.Name },
@@ -538,7 +538,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         }
     }
 
-    private object[] ConvertMissionFactionEffects(FactionEffect[] factionEffects)
+    private object[]? ConvertMissionFactionEffects(FactionEffect[]? factionEffects)
     {
         if (factionEffects == null)
             return null;
@@ -550,13 +550,13 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         return effects.ToArray();
     }
 
-    private object[] ConvertCommodityReward(CommodityReward[] commodityRewards) => commodityRewards?.Select(cr => new { itemName = cr.Name, itemCount = cr.Count })?.ToArray<object>();
+    private object[]? ConvertCommodityReward(CommodityReward[]? commodityRewards) => commodityRewards?.Select(cr => new { itemName = cr.Name, itemCount = cr.Count }).ToArray<object>();
 
-    private object[] ConvertMaterialReward(MaterialsReward[] materialsRewards) => materialsRewards?.Select(cr => new { itemName = cr.Name, itemCount = cr.Count })?.ToArray<object>();
+    private object[]? ConvertMaterialReward(MaterialsReward[]? materialsRewards) => materialsRewards?.Select(cr => new { itemName = cr.Name, itemCount = cr.Count }).ToArray<object>();
 
     private IEnumerable<ApiInputEvent> ConvertEvent(MissionAccepted e)
     {
-        var data = new Dictionary<string, object>()
+        var data = new Dictionary<string, object?>()
             {
                 { "missionName", e.Name },
                 { "missionGameID", e.MissionId },
@@ -612,7 +612,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         var shipEvent = new ApiInputEvent("setCommanderShip")
         {
             Timestamp = e.Timestamp,
-            EventData = new Dictionary<string, object>()
+            EventData = new Dictionary<string, object?>()
             {
                 { "shipType", e.Ship },
                 { "shipGameID", e.ShipId },
@@ -692,7 +692,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
     {
         yield return new ApiInputEvent("addCommanderCombatInterdictionEscape")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", playerStateRecorder.GetPlayerSystem(e.Timestamp) },
                 { "opponentName", e.Interdictor },
@@ -706,7 +706,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
     {
         yield return new ApiInputEvent("addCommanderCombatInterdiction")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", playerStateRecorder.GetPlayerSystem(e.Timestamp) },
                 { "opponentName", e.Interdicted ?? e.Faction },
@@ -720,7 +720,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
     {
         yield return new ApiInputEvent("addCommanderCombatInterdicted")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", playerStateRecorder.GetPlayerSystem(e.Timestamp) },
                 { "opponentName", e.Interdictor },
@@ -736,7 +736,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         var timestamp = @event.Timestamp;
         yield return new ApiInputEvent("addCommanderCombatKill")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", playerStateRecorder.GetPlayerSystem(timestamp) },
                 { "opponentName", @event.Victim },
@@ -759,7 +759,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         var timestamp = @event.Timestamp;
         yield return new ApiInputEvent("addCommanderTravelDock")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", @event.StarSystem },
                 { "stationName", @event.StationName },
@@ -776,7 +776,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         var timestamp = @event.Timestamp;
         yield return new ApiInputEvent("addCommanderTravelFSDJump")
         {
-            EventData = new Dictionary<string, object>
+            EventData = new Dictionary<string, object?>
             {
                 { "starsystemName", @event.StarSystem },
                 { "jumpDistance", @event.JumpDist },
@@ -799,7 +799,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
         {
             yield return new ApiInputEvent("setCommanderReputationMinorFaction")
             {
-                EventData = new Dictionary<string, object>
+                EventData = new Dictionary<string, object?>
                 {
                     { "minorfactionName", faction.Name },
                     { "minorfactionReputation", faction.MyReputation / 100.0 },
@@ -845,7 +845,7 @@ public class InaraEventConverter : IEventConverter<ApiInputEvent>
             {
                 yield return new ApiInputEvent("setCommanderRankEngineer")
                 {
-                    EventData = new Dictionary<string, object>
+                    EventData = new Dictionary<string, object?>
                     {
                         { "engineerName", engineer.EngineerName },
                         { "rankStage", engineer.Progress },

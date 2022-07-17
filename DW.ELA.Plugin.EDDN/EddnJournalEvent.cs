@@ -7,7 +7,7 @@ namespace DW.ELA.Plugin.EDDN;
 public class EddnJournalEvent : EddnEvent
 {
     [JsonProperty("message")]
-    public JObject Message { get; set; }
+    public required JObject Message { get; set; }
 
     public override string SchemaRef => "https://eddn.edcd.io/schemas/journal/1";
 }

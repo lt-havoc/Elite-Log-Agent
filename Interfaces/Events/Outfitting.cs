@@ -8,14 +8,14 @@ public class Outfitting : JournalEvent
     public long MarketId { get; set; }
 
     [JsonProperty("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonProperty("Horizons")]
     public bool? Horizons { get; set; }
 
     [JsonProperty("Items")]
-    public OutfittingItem[] Items { get; set; }
+    public required OutfittingItem[] Items { get; set; }
 }

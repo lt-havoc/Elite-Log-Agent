@@ -6,11 +6,11 @@ namespace DW.ELA.Interfaces.Events;
 public class Cargo : JournalEvent
 {
     [JsonProperty("Vessel")]
-    public string Vessel { get; set; }
+    public required string Vessel { get; set; }
 
     [JsonProperty("Count")]
     public long? Count { get; set; }
 
     [JsonProperty("Inventory")]
-    public InventoryRecord[] Inventory { get; set; }
+    public required InventoryRecord[] Inventory { get; set; }
 }

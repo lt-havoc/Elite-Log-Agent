@@ -9,10 +9,10 @@ public class Shipyard : JournalEvent
     public long MarketId { get; set; }
 
     [JsonProperty("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonProperty("Horizons")]
     public bool? Horizons { get; set; }
@@ -21,5 +21,5 @@ public class Shipyard : JournalEvent
     public bool? AllowCobraMkIv { get; set; }
 
     [JsonProperty("PriceList")]
-    public ShipyardPrice[] Prices { get; set; }
+    public ShipyardPrice[]? Prices { get; set; }
 }

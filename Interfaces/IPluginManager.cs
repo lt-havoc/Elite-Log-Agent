@@ -8,7 +8,7 @@ public interface IPluginManager
 
     IReadOnlyCollection<IPlugin> LoadedPlugins { get; }
 
-    IPlugin GetPluginById(string pluginId);
+    IPlugin? GetPluginById(string pluginId);
 
     void LoadPlugin(string pluginAssemblyName);
 

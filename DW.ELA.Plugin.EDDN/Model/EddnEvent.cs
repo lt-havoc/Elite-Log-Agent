@@ -7,10 +7,10 @@ namespace DW.ELA.Plugin.EDDN.Model;
 public class EddnEvent
 {
     [JsonProperty("$schemaRef")]
-    public virtual string SchemaRef { get; }
+    public virtual string SchemaRef { get; } = null!;
 
     [JsonProperty("header")]
-    public IDictionary<string, string> Header { get; set; }
+    public required IDictionary<string, string> Header { get; set; }
 
     public override string ToString() => Serialize.ToJson(this);
 }

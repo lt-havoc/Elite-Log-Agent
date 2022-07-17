@@ -5,16 +5,16 @@ namespace DW.ELA.Interfaces.Events;
 public class StoredItem
 {
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("Name_Localised")]
-    public string NameLocalised { get; set; }
+    public string? NameLocalised { get; set; }
 
     [JsonProperty("StorageSlot")]
     public long StorageSlot { get; set; }
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonProperty("MarketID")]
     public long MarketId { get; set; }
@@ -32,7 +32,7 @@ public class StoredItem
     public bool Hot { get; set; }
 
     [JsonProperty("EngineerModifications")]
-    public string EngineerModifications { get; set; }
+    public string? EngineerModifications { get; set; }
 
     [JsonProperty("Level")]
     public short? Level { get; set; }

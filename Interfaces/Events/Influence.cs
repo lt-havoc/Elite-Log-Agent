@@ -8,8 +8,8 @@ public class Influence
     public long SystemAddress { get; set; }
 
     [JsonProperty("Trend")]
-    public string Trend { get; set; }
+    public required string Trend { get; set; }
 
     [JsonProperty("Influence")]
-    public string InfluenceValue { get; set; }
+    public required string InfluenceValue { get; set; }
 }

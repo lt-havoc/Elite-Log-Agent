@@ -11,7 +11,7 @@ public static class AppInfo
     {
         var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? typeof(AppInfo).Assembly;
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-        Version = fileVersionInfo.FileVersion;
+        Version = fileVersionInfo.FileVersion ?? "Unknown";
 
         var clickOnceInstallationDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Apps");
         IsNetworkDeployed = assembly.Location.StartsWith(clickOnceInstallationDirectory);

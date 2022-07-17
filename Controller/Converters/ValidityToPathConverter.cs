@@ -1,4 +1,3 @@
-#nullable enable
 namespace DW.ELA.Controller.Converters;
 
 using System;

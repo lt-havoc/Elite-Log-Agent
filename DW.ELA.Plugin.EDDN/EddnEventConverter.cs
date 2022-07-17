@@ -156,7 +156,7 @@ public class EddnEventConverter
 
         if (@event.Message["StarSystem"] == null)
         {
-            string system = stateHistoryRecorder.GetPlayerSystem(e.Timestamp);
+            string? system = stateHistoryRecorder.GetPlayerSystem(e.Timestamp);
 
             // if we can't determine player's location, abort
             if (system != null)
@@ -170,17 +170,20 @@ public class EddnEventConverter
             }
         }
 
-        string starSystem = @event.Message["StarSystem"].ToObject<string>();
+        string? starSystem = @event.Message["StarSystem"]?.ToObject<string>();
 
-        if (@event.Message["StarPos"] == null)
-        {
-            double[] starPos = stateHistoryRecorder.GetStarPos(starSystem);
-            if (starPos == null)
+        if (@event.Message["StarPos"] is null)
+        {   
+            if (starSystem is null)
+                yield break;
+            
+            double[]? starPos = stateHistoryRecorder.GetStarPos(starSystem);
+            if (starPos is null)
                 yield break; // we don't know what the system coordinates are
             @event.Message.Add("StarPos", new JArray(starPos));
         }
 
-        if (@event.Message["SystemAddress"] == null)
+        if (@event.Message["SystemAddress"] is null && starSystem is not null)
         {
             ulong? systemAddress = stateHistoryRecorder.GetSystemAddress(starSystem);
             if (systemAddress != null)
@@ -249,7 +252,7 @@ public class EddnEventConverter
             obj.Remove(key);
     }
 
-    private static void WalkNode(JToken node, Action<JObject> objectAction, Action<JProperty> propertyAction)
+    private static void WalkNode(JToken node, Action<JObject>? objectAction, Action<JProperty>? propertyAction)
     {
         if (node.Type == JTokenType.Object)
         {

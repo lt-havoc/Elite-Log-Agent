@@ -6,19 +6,19 @@ namespace DW.ELA.Interfaces.Events;
 public class MissionCompleted : JournalEvent
 {
     [JsonProperty("Faction")]
-    public string Faction { get; set; }
+    public required string Faction { get; set; }
 
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("MissionID")]
     public long MissionId { get; set; }
 
     [JsonProperty("Commodity")]
-    public string Commodity { get; set; }
+    public string? Commodity { get; set; }
 
     [JsonProperty("Commodity_Localised")]
-    public string CommodityLocalised { get; set; }
+    public string? CommodityLocalised { get; set; }
 
     [JsonProperty]
     public long? Count { get; set; }
@@ -27,44 +27,44 @@ public class MissionCompleted : JournalEvent
     public long? KillCount { get; set; }
 
     [JsonProperty]
-    public string DestinationSystem { get; set; }
+    public string? DestinationSystem { get; set; }
 
     [JsonProperty]
-    public string DestinationStation { get; set; }
+    public string? DestinationStation { get; set; }
 
     [JsonProperty]
-    public string NewDestinationSystem { get; set; }
+    public string? NewDestinationSystem { get; set; }
 
     [JsonProperty]
-    public string NewDestinationStation { get; set; }
+    public string? NewDestinationStation { get; set; }
 
     [JsonProperty("Reward")]
     public long? Reward { get; set; }
 
     [JsonProperty("Donation")]
-    public string Donation { get; set; }
+    public string? Donation { get; set; }
 
     [JsonProperty("Donated")]
     public long? Donated { get; set; }
 
     [JsonProperty("CommodityReward")]
-    public CommodityReward[] CommodityReward { get; set; }
+    public CommodityReward[]? CommodityReward { get; set; }
 
     [JsonProperty("MaterialsReward")]
-    public MaterialsReward[] MaterialsReward { get; set; }
+    public MaterialsReward[]? MaterialsReward { get; set; }
 
     [JsonProperty("FactionEffects")]
-    public FactionEffect[] FactionEffects { get; set; }
+    public FactionEffect[]? FactionEffects { get; set; }
 
     [JsonProperty("TargetType")]
-    public string TargetType { get; set; }
+    public string? TargetType { get; set; }
 
     [JsonProperty("TargetType_Localised")]
-    public string TargetTypeLocalised { get; set; }
+    public string? TargetTypeLocalised { get; set; }
 
     [JsonProperty("TargetFaction")]
-    public string TargetFaction { get; set; }
+    public string? TargetFaction { get; set; }
 
     [JsonProperty("Target")]
-    public string Target { get; set; }
+    public string? Target { get; set; }
 }

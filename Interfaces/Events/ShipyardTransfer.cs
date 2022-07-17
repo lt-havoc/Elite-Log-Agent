@@ -5,16 +5,16 @@ namespace DW.ELA.Interfaces.Events;
 public class ShipyardTransfer : JournalEvent
 {
     [JsonProperty("ShipType")]
-    public string ShipType { get; set; }
+    public required string ShipType { get; set; }
 
     [JsonProperty("ShipType_Localised")]
-    public string ShipTypeLocalised { get; set; }
+    public string? ShipTypeLocalised { get; set; }
 
     [JsonProperty("ShipID")]
     public long ShipId { get; set; }
 
     [JsonProperty("System")]
-    public string System { get; set; }
+    public required string System { get; set; }
 
     [JsonProperty("ShipMarketID")]
     public long ShipMarketId { get; set; }

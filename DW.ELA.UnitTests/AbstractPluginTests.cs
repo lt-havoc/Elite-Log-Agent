@@ -47,9 +47,8 @@ public class AbstractPluginTests
         public readonly ConcurrentBag<JournalEvent> Flushed = new();
 
         public TestPlugin(ISettingsProvider settingsProvider)
-            : base(settingsProvider)
+            : base(settingsProvider, new IdentityLogConverter())
         {
-            EventConverter = new IdentityLogConverter();
         }
 
         public override string PluginName => "TestPlugin";
@@ -61,11 +60,11 @@ public class AbstractPluginTests
             foreach (var e in events)
                 Flushed.Add(e);
         }
-#nullable enable
+        
         public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) => null!;
 
         public override Type View => typeof(object);
-#nullable restore
+
         public override void ReloadSettings()
         {
         }

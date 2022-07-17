@@ -15,14 +15,14 @@ public class FileSettingsStorage : ISettingsProvider
     private readonly object settingsCacheLock = new();
     private readonly string settingsFileDirectory;
 
-    private GlobalSettings settingsCache;
+    private GlobalSettings? settingsCache;
 
     public FileSettingsStorage(IPathManager pathManager)
     {
         settingsFileDirectory = pathManager.SettingsDirectory;
     }
 
-    public event EventHandler SettingsChanged;
+    public event EventHandler? SettingsChanged;
 
     public GlobalSettings Settings
     {

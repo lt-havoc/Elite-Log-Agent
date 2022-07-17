@@ -5,8 +5,8 @@ namespace DW.ELA.Interfaces.Events;
 public class TopTier
 {
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("Bonus")]
-    public string Bonus { get; set; }
+    public required string Bonus { get; set; }
 }

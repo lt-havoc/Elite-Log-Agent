@@ -6,5 +6,5 @@ namespace DW.ELA.Interfaces.Events;
 public class JoinACrew : JournalEvent
 {
     [JsonProperty("Captain")]
-    public string Captain { get; set; }
+    public required string Captain { get; set; }
 }

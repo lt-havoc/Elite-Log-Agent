@@ -25,13 +25,18 @@ public class EdsmPlugin : AbstractBatchSendPlugin<JObject, EdsmSettings>, IApiKe
     private readonly IUserNotificationInterface notificationInterface;
 
     public EdsmPlugin(ISettingsProvider settingsProvider, IPlayerStateHistoryRecorder playerStateRecorder, IRestClientFactory restClientFactory, IUserNotificationInterface notificationInterface)
-        : base(settingsProvider)
+        : base(settingsProvider, new EdsmEventConverter(playerStateRecorder))
     {
         RestClient = restClientFactory.CreateRestClient(EdsmApiUrl);
-        EventConverter = new EdsmEventConverter(playerStateRecorder);
         ignoredEvents =
              RestClient.GetAsync("discard")
-                .ContinueWith((t) => t.IsFaulted ? new HashSet<string>() : new HashSet<string>(JArray.Parse(t.Result).ToObject<string[]>()));
+                .ContinueWith((t) =>
+                {
+                    var result = JArray.Parse(t.Result).ToObject<string[]>();
+                    return t.IsFaulted || result is null
+                        ? new HashSet<string>()
+                        : new HashSet<string>(result);
+                });
 
         settingsProvider.SettingsChanged += (o, e) => ReloadSettings();
         ReloadSettings();
@@ -67,7 +72,7 @@ public class EdsmPlugin : AbstractBatchSendPlugin<JObject, EdsmSettings>, IApiKe
 
         // Remove keys which were removed from config
         foreach (string key in ApiKeys.Keys.Except(actualApiKeys.Keys))
-            ApiKeys.TryRemove(key, out string _);
+            ApiKeys.TryRemove(key, out string? _);
     }
 
     public override async void FlushEvents(ICollection<JObject> events)
@@ -75,11 +80,11 @@ public class EdsmPlugin : AbstractBatchSendPlugin<JObject, EdsmSettings>, IApiKe
         try
         {
             var commander = CurrentCommander;
-            if (commander != null && ApiKeys.TryGetValue(commander.Name, out string apiKey))
+            if (commander != null && ApiKeys.TryGetValue(commander.Name, out string? apiKey))
             {
                 var apiFacade = new EdsmApiFacade(RestClient, commander.Name, apiKey);
                 var apiEventsBatches = events
-                    .Where(e => !ignoredEvents.Result.Contains(e["event"].ToString()))
+                    .Where(e => e["event"] is not null && !ignoredEvents.Result.Contains(e["event"]!.ToString()))
                     .Reverse()
                     .Batch(100) // EDSM API only accepts 100 events in single call
                     .ToList();
@@ -111,12 +116,11 @@ public class EdsmPlugin : AbstractBatchSendPlugin<JObject, EdsmSettings>, IApiKe
             Log.Error(e, "Error while processing events for EDSM");
         }
     }
-#nullable enable
     public override AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings) =>
         new MultiCmdrApiKeyViewModel(PluginId, GetActualApiKeys(), this, "https://www.edsm.net/en/settings/api", settings, SaveSettings);
 
     public override Type View => MultiCmdrApiKeyControl.View;
-#nullable restore
+
     private void SaveSettings(GlobalSettings settings, IReadOnlyDictionary<string, string> values) => new PluginSettingsFacade<EdsmSettings>(PluginId).SetPluginSettings(settings, new EdsmSettings() { ApiKeys = values.ToDictionary() });
 
     public async Task<bool> ValidateKeyAsync(string cmdrName, string apiKey)

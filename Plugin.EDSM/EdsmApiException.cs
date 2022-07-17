@@ -12,7 +12,7 @@ internal class EdsmApiException : Exception
     {
     }
 
-    public EdsmApiException(string message)
+    public EdsmApiException(string? message)
         : base(message)
     {
     }

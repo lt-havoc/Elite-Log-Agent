@@ -15,7 +15,7 @@ public class InaraApiFacade
     private readonly IRestClient client;
     private readonly string apiKey;
     private readonly string commanderName;
-    private readonly string frontierID;
+    private readonly string? frontierID;
     private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
 
     private readonly ICollection<string> ignoredErrors = new HashSet<string>
@@ -29,7 +29,7 @@ public class InaraApiFacade
         "No items provided, the module storage was just erased."
     };
 
-    public InaraApiFacade(IRestClient client, string commanderName, string apiKey, string frontierID = null)
+    public InaraApiFacade(IRestClient client, string commanderName, string apiKey, string? frontierID = null)
     {
         this.client = client;
         this.apiKey = apiKey;
@@ -60,7 +60,7 @@ public class InaraApiFacade
             {
                 var outputEvent = outputData.Events[i];
                 int? statusCode = outputEvent.EventStatus;
-                string statusText = outputEvent.EventStatusText;
+                string statusText = outputEvent.EventStatusText ?? "Unknown event status";
 
                 if (statusCode != 200)
                 {
@@ -83,7 +83,7 @@ public class InaraApiFacade
         {
             var errorText = outputData.Header.EventStatusText;
 
-            if (errorText.Contains("Too much requests"))
+            if (errorText != null && errorText.Contains("Too much requests"))
                 throw new RateLimitException();
 
             if (errorText == "Invalid API key.")
@@ -91,7 +91,7 @@ public class InaraApiFacade
 
             throw new AggregateException($"Error from API: {errorText}", exceptions.ToArray());
         }
-        return outputData.Events;
+        return outputData.Events ?? Array.Empty<ApiOutputEvent>();
     }
 
     public async Task<string> GetCmdrName()

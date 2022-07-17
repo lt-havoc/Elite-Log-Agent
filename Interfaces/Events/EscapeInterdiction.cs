@@ -6,10 +6,10 @@ namespace DW.ELA.Interfaces.Events;
 public class EscapeInterdiction : JournalEvent
 {
     [JsonProperty("Interdictor")]
-    public string Interdictor { get; set; }
+    public required string Interdictor { get; set; }
 
     [JsonProperty("Interdictor_Localised")]
-    public string InterdictorLocalised { get; set; }
+    public string? InterdictorLocalised { get; set; }
 
     [JsonProperty("IsPlayer")]
     public bool IsPlayer { get; set; }

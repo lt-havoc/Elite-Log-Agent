@@ -22,7 +22,7 @@ public class PluginSettingsFacade<T>
         try
         {
             if (settings.PluginSettings.ContainsKey(pluginId))
-                return settings.PluginSettings[pluginId].ToObject<T>();
+                return settings.PluginSettings[pluginId].ToObject<T>() ?? new T();
         }
         catch (Exception e)
         {

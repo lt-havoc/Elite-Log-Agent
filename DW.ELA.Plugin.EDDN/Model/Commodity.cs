@@ -26,7 +26,7 @@ public class Commodity
     /// Symbolic name as returned by the Companion API
     /// </summary>
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Price to sell to the market
@@ -35,7 +35,7 @@ public class Commodity
     public long SellPrice { get; set; }
 
     [JsonProperty("statusFlags", NullValueHandling = NullValueHandling.Ignore)]
-    public string[] StatusFlags { get; set; }
+    public string[]? StatusFlags { get; set; }
 
     [JsonProperty("stock")]
     public long Stock { get; set; }

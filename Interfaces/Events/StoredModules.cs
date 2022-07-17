@@ -9,11 +9,11 @@ public class StoredModules : JournalEvent
     public long MarketId { get; set; }
 
     [JsonProperty("StationName")]
-    public string StationName { get; set; }
+    public required string StationName { get; set; }
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public required string StarSystem { get; set; }
 
     [JsonProperty("Items")]
-    public StoredItem[] Items { get; set; }
+    public required StoredItem[] Items { get; set; }
 }

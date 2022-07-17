@@ -29,7 +29,7 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
     private readonly TimeSpan checkInterval;
 
     // 
-    private string currentFile;
+    private string? currentFile;
     private long filePosition;
 
     /// <summary>
@@ -64,7 +64,7 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
         Log.Info().Message("Started monitoring").Property("directory", logDirectory).Write();
     }
 
-    private void LogFlushTimer_Event(object sender, ElapsedEventArgs e)
+    private void LogFlushTimer_Event(object? sender, ElapsedEventArgs e)
     {
         Task.Factory.StartNew(() => SendEventsFromJournal(false));
         logFlushTimer.Interval = EliteDangerous.IsRunning ? checkInterval.TotalMilliseconds : checkInterval.TotalMilliseconds * 6;
@@ -110,7 +110,7 @@ public class JournalMonitor : JournalFileReader, ILogRealTimeDataSource
 
                 if (checkOtherFiles || currentFile == null)
                 {
-                    string latestFile = JournalFileEnumerator.GetLogFiles(logDirectory).FirstOrDefault();
+                    string? latestFile = JournalFileEnumerator.GetLogFiles(logDirectory).FirstOrDefault();
                     if (latestFile == currentFile || latestFile == null)
                         return;
 

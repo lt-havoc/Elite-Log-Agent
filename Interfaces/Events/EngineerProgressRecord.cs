@@ -10,7 +10,7 @@ public class EngineerProgressRecord
     }
 
     [JsonProperty("Engineer")]
-    public string EngineerName { get; set; }
+    public required string EngineerName { get; set; }
 
     [JsonProperty("EngineerID")]
     public long? EngineerId { get; set; }

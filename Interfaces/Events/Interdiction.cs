@@ -12,14 +12,14 @@ public class Interdiction : JournalEvent
     public bool IsPlayer { get; set; }
 
     [JsonProperty("Interdicted")]
-    public string Interdicted { get; set; }
+    public required string Interdicted { get; set; }
 
     [JsonProperty("Faction")]
-    public string Faction { get; set; }
+    public string? Faction { get; set; }
 
     [JsonProperty("CombatRank")]
     public short? CombatRank { get; set; }
 
     [JsonProperty("Power")]
-    public string Power { get; set; }
+    public string? Power { get; set; }
 }

@@ -21,17 +21,17 @@ public class PlayerStateRecorder : IPlayerStateHistoryRecorder
     private readonly ConcurrentDictionary<string, double[]> systemCoordinates = new();
     private readonly ConcurrentDictionary<string, ulong> systemAddresses = new();
 
-    public string GetPlayerSystem(DateTime atTime) => starSystemRecorder.GetStateAt(atTime);
+    public string? GetPlayerSystem(DateTime atTime) => starSystemRecorder.GetStateAt(atTime);
 
-    public string GetPlayerStation(DateTime atTime) => stationRecorder.GetStateAt(atTime);
+    public string? GetPlayerStation(DateTime atTime) => stationRecorder.GetStateAt(atTime);
 
-    public string GetPlayerShipType(DateTime atTime) => shipRecorder.GetStateAt(atTime)?.ShipType;
+    public string? GetPlayerShipType(DateTime atTime) => shipRecorder.GetStateAt(atTime)?.ShipType;
 
     public long? GetPlayerShipId(DateTime atTime) => shipRecorder.GetStateAt(atTime)?.ShipID;
 
     public bool GetPlayerIsInCrew(DateTime atTime) => crewRecorder.GetStateAt(atTime);
 
-    public double[] GetStarPos(string systemName) => systemCoordinates.GetValueOrDefault(systemName);
+    public double[]? GetStarPos(string systemName) => systemCoordinates.GetValueOrDefault(systemName);
 
     public ulong? GetSystemAddress(string systemName) => systemAddresses.ContainsKey(systemName) ? systemAddresses[systemName] : (ulong?)null;
 
@@ -132,7 +132,7 @@ public class PlayerStateRecorder : IPlayerStateHistoryRecorder
 
         public string ShipType { get; }
 
-        public override bool Equals(object obj) => obj is ShipRecord record && ShipID == record.ShipID && ShipType == record.ShipType;
+        public override bool Equals(object? obj) => obj is ShipRecord record && ShipID == record.ShipID && ShipType == record.ShipType;
 
         public override int GetHashCode() => HashCode.Combine(ShipID, ShipType);
 
@@ -141,9 +141,9 @@ public class PlayerStateRecorder : IPlayerStateHistoryRecorder
 
     private class StateRecorder<T>
     {
-        private readonly SortedList<DateTime, T> stateRecording = new();
+        private readonly SortedList<DateTime, T?> stateRecording = new();
 
-        public T GetStateAt(DateTime atTime)
+        public T? GetStateAt(DateTime atTime)
         {
             try
             {
@@ -162,7 +162,7 @@ public class PlayerStateRecorder : IPlayerStateHistoryRecorder
             }
         }
 
-        public bool RecordState(T state, DateTime at)
+        public bool RecordState(T? state, DateTime at)
         {
             try
             {

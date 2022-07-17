@@ -6,7 +6,7 @@ namespace DW.ELA.Interfaces.Events;
 public class Powerplay : JournalEvent
 {
     [JsonProperty]
-    public string Power { get; set; }
+    public required string Power { get; set; }
 
     [JsonProperty]
     public int Rank { get; set; }

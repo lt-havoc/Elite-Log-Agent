@@ -5,10 +5,10 @@ namespace DW.ELA.Interfaces.Events;
 public class Ring
 {
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("RingClass")]
-    public string RingClass { get; set; }
+    public required string RingClass { get; set; }
 
     [JsonProperty("MassMT")]
     public double MassMt { get; set; }

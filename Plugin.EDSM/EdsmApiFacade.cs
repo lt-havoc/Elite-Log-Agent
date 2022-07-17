@@ -30,7 +30,7 @@ public class EdsmApiFacade : IEdsmApiFacade
         var input = CreateHeader();
         input["message"] = new JArray(events).ToString();
         string result = await PostAsync(input);
-        int returnCode = JObject.Parse(result)["msgnum"].ToObject<int>();
+        int? returnCode = JObject.Parse(result)["msgnum"]?.ToObject<int>();
     }
 
     private async Task<string> PostAsync(IDictionary<string, string> input)
@@ -38,7 +38,7 @@ public class EdsmApiFacade : IEdsmApiFacade
         string result = await restClient.PostAsync(input);
         var jResult = JObject.Parse(result);
         int? returnCode = jResult["msgnum"]?.ToObject<int>();
-        string msg = jResult["msg"]?.ToString();
+        string? msg = jResult["msg"]?.ToString();
         if (msg == "Commander name/API Key not found")
             throw new InvalidApiKeyException();
         return returnCode != 100 ? throw new EdsmApiException(msg) : result;

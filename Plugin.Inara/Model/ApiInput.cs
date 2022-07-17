@@ -18,7 +18,7 @@ public sealed class ApiInputEvent
     public DateTime Timestamp { get; internal set; }
 
     [JsonProperty("eventData")]
-    public object EventData { get; internal set; }
+    public object? EventData { get; internal set; }
 
 
     public override string ToString() => Serialize.ToJson(this);

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DW.ELA.Utility.Extensions;
 
 namespace DW.ELA.Utility;
 
 public static class Functional
 {
-    public static Exception ExecuteAndCatch(Action action)
+    public static Exception? ExecuteAndCatch(Action action)
     {
         try
         {
@@ -19,7 +20,7 @@ public static class Functional
         }
     }
 
-    public static Exception ExecuteAndCatch<T>(Action<T> action, T argument)
+    public static Exception? ExecuteAndCatch<T>(Action<T> action, T argument)
     {
         try
         {
@@ -36,7 +37,7 @@ public static class Functional
     {
         var exceptions = items
             .Select(i => ExecuteAndCatch(function, i))
-            .Where(e => e != null)
+            .WhereNotNull()
             .ToArray();
         if (exceptions.Length == 1)
             throw exceptions.Single();

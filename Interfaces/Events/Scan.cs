@@ -7,13 +7,13 @@ public class Scan : JournalEvent
 {
 
     [JsonProperty("StarSystem")]
-    public string StarSystem { get; set; }
+    public string? StarSystem { get; set; }
 
     [JsonProperty("SystemAddress")]
     public ulong? SystemAddress { get; set; }
 
     [JsonProperty("BodyName")]
-    public string BodyName { get; set; }
+    public string? BodyName { get; set; }
 
     [JsonProperty("BodyID")]
     public long? BodyID { get; set; }
@@ -25,25 +25,25 @@ public class Scan : JournalEvent
     public bool? TidalLock { get; set; }
 
     [JsonProperty("TerraformState")]
-    public string TerraformState { get; set; }
+    public string? TerraformState { get; set; }
 
     [JsonProperty("PlanetClass")]
-    public string PlanetClass { get; set; }
+    public string? PlanetClass { get; set; }
 
     [JsonProperty("Composition")]
-    public GeologicComposition Composition { get; set; }
+    public GeologicComposition? Composition { get; set; }
 
     [JsonProperty("Atmosphere")]
-    public string Atmosphere { get; set; }
+    public string? Atmosphere { get; set; }
 
     [JsonProperty("AtmosphereType")]
-    public string AtmosphereType { get; set; }
+    public string? AtmosphereType { get; set; }
 
     [JsonProperty("AtmosphereComposition")]
-    public Composition[] AtmosphereComposition { get; set; }
+    public Composition[]? AtmosphereComposition { get; set; }
 
     [JsonProperty("Volcanism")]
-    public string Volcanism { get; set; }
+    public string? Volcanism { get; set; }
 
     [JsonProperty("MassEM")]
     public double? MassEm { get; set; }
@@ -85,10 +85,10 @@ public class Scan : JournalEvent
     public double? AxialTilt { get; set; }
 
     [JsonProperty("ScanType")]
-    public string ScanType { get; set; }
+    public required string ScanType { get; set; }
 
     [JsonProperty("StarType")]
-    public string StarType { get; set; }
+    public string? StarType { get; set; }
 
     [JsonProperty("Age_MY")]
     public long? AgeMegaYears { get; set; }
@@ -100,13 +100,13 @@ public class Scan : JournalEvent
     public double? AbsoluteMagnitude { get; set; }
 
     [JsonProperty("Luminosity")]
-    public string Luminosity { get; set; }
+    public string? Luminosity { get; set; }
 
     [JsonProperty("Rings")]
-    public Ring[] Rings { get; set; }
+    public Ring[]? Rings { get; set; }
 
     [JsonProperty("Materials")]
-    public Composition[] Materials { get; set; }
+    public Composition[]? Materials { get; set; }
 
     [JsonProperty]
     public bool? WasDiscovered { get; set; }

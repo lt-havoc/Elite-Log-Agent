@@ -22,7 +22,6 @@ public interface IPlugin
     /// </summary>
     /// <param name="settings">Instance of temporary settings object held in setup session</param>
     /// <returns>Plugin settings view model</returns>
-#nullable enable
     AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
 
     /// <summary>
@@ -30,7 +29,7 @@ public interface IPlugin
     /// </summary>
     /// <returns>Plugin settings view's type</returns>
     Type View { get; }
-#nullable restore
+
     /// <summary>
     /// Callback to signal settings have changed and it's time to update
     /// </summary>

@@ -8,11 +8,11 @@ public class ShipyardPrice
     public long Id { get; set; }
 
     [JsonProperty("ShipType")]
-    public string ShipType { get; set; }
+    public required string ShipType { get; set; }
 
     [JsonProperty("ShipPrice")]
     public long ShipPrice { get; set; }
 
     [JsonProperty("ShipType_Localised", NullValueHandling = NullValueHandling.Ignore)]
-    public string ShipTypeLocalised { get; set; }
+    public string? ShipTypeLocalised { get; set; }
 }

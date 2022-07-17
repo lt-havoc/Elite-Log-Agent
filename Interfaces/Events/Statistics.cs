@@ -7,47 +7,47 @@ namespace DW.ELA.Interfaces.Events;
 public class Statistics : JournalEvent
 {
     [JsonProperty("Bank_Account")]
-    public Dictionary<string, long> BankAccount { get; set; }
+    public required Dictionary<string, long> BankAccount { get; set; }
 
     [JsonProperty("Combat")]
-    public CombatStatistics Combat { get; set; }
+    public required CombatStatistics Combat { get; set; }
 
     [JsonProperty("Crime")]
-    public CrimeStatistics Crime { get; set; }
+    public required CrimeStatistics Crime { get; set; }
 
     [JsonProperty("Smuggling")]
-    public SmugglingStatistics Smuggling { get; set; }
+    public required SmugglingStatistics Smuggling { get; set; }
 
     [JsonProperty("Trading")]
-    public TradingStatistics Trading { get; set; }
+    public required TradingStatistics Trading { get; set; }
 
     [JsonProperty("Mining")]
-    public MiningStatistics Mining { get; set; }
+    public required MiningStatistics Mining { get; set; }
 
     [JsonProperty("Exploration")]
-    public ExplorationStatictics Exploration { get; set; }
+    public required ExplorationStatictics Exploration { get; set; }
 
     [JsonProperty("Passengers")]
-    public PassengersStatistics Passengers { get; set; }
+    public required PassengersStatistics Passengers { get; set; }
 
     [JsonProperty("Search_And_Rescue")]
-    public SearchAndRescueStatistics SearchAndRescue { get; set; }
+    public required SearchAndRescueStatistics SearchAndRescue { get; set; }
 
     [JsonProperty("TG_ENCOUNTERS")]
-    public ThargoidEncountersStatistics TgEncounters { get; set; }
+    public ThargoidEncountersStatistics? TgEncounters { get; set; }
 
     [JsonProperty("Crafting")]
-    public CraftingStatistics Crafting { get; set; }
+    public required CraftingStatistics Crafting { get; set; }
 
     [JsonProperty("Crew")]
-    public CrewStatistics Crew { get; set; }
+    public required CrewStatistics Crew { get; set; }
 
     [JsonProperty("Multicrew")]
-    public MulticrewStatistics Multicrew { get; set; }
+    public required MulticrewStatistics Multicrew { get; set; }
 
     [JsonProperty("Material_Trader_Stats")]
-    public MaterialTraderStatistics MaterialTraderStats { get; set; }
+    public MaterialTraderStatistics? MaterialTraderStats { get; set; }
 
     [JsonProperty("CQC")]
-    public Dictionary<string, long> Cqc { get; set; }
+    public Dictionary<string, long>? Cqc { get; set; }
 }

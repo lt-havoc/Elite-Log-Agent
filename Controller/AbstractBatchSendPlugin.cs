@@ -17,9 +17,10 @@ public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObs
     private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
     private readonly Timer flushTimer = new();
 
-    protected AbstractBatchSendPlugin(ISettingsProvider settingsProvider)
+    protected AbstractBatchSendPlugin(ISettingsProvider settingsProvider, IEventConverter<TEvent> eventConverter)
     {
         SettingsProvider = settingsProvider ?? throw new ArgumentNullException(nameof(settingsProvider));
+        EventConverter = eventConverter ?? throw new ArgumentNullException(nameof(eventConverter));
         flushTimer.AutoReset = false;
         flushTimer.Interval = FlushInterval.TotalMilliseconds;
         flushTimer.Start();
@@ -31,13 +32,13 @@ public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObs
 
     public abstract string PluginId { get; }
 
-    protected CommanderData CurrentCommander { get; private set; }
+    protected CommanderData? CurrentCommander { get; private set; }
 
     protected PluginSettingsFacade<TSettings> SettingsFacade { get; private set; }
 
     protected virtual TimeSpan FlushInterval => TimeSpan.FromSeconds(10);
 
-    protected IEventConverter<TEvent> EventConverter { get; set; }
+    protected IEventConverter<TEvent> EventConverter { get; }
 
     protected ISettingsProvider SettingsProvider { get; }
 
@@ -48,11 +49,11 @@ public abstract class AbstractBatchSendPlugin<TEvent, TSettings> : IPlugin, IObs
     }
 
     protected ConcurrentQueue<TEvent> EventQueue { get; } = new ConcurrentQueue<TEvent>();
-#nullable enable
+    
     public abstract AbstractSettingsViewModel GetPluginSettingsViewModel(GlobalSettings settings);
 
     public abstract Type View { get; }
-#nullable restore
+
     public abstract void FlushEvents(ICollection<TEvent> events);
 
     public abstract void ReloadSettings();

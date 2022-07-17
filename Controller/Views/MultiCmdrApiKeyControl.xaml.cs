@@ -1,4 +1,3 @@
-#nullable enable
 namespace DW.ELA.Controller.Views;
 
 using System;
@@ -51,7 +50,7 @@ public class MultiCmdrApiKeyControl : UserControl
         dataGrid.CurrentColumn = dataGrid.Columns.First();
     }
 
-    private void OnApiKeyAdded(object sender, ApiKeyAddedEventArgs e)
+    private void OnApiKeyAdded(object? sender, ApiKeyAddedEventArgs e)
     {
         var dataGrid = this.FindControl<DataGrid>("ApiKeyGrid");
         dataGrid.SelectedItem = e.ApiKeyViewModel;

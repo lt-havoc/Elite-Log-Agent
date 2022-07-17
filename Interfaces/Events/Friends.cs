@@ -6,8 +6,8 @@ namespace DW.ELA.Interfaces.Events;
 public class Friends : JournalEvent
 {
     [JsonProperty]
-    public string Status { get; set; }
+    public required string Status { get; set; }
 
     [JsonProperty]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }

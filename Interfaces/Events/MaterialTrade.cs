@@ -8,11 +8,11 @@ public class MaterialTrade : JournalEvent
     public long MarketId { get; set; }
 
     [JsonProperty("TraderType")]
-    public string TraderType { get; set; }
+    public required string TraderType { get; set; }
 
     [JsonProperty("Paid")]
-    public MaterialDealLeg Paid { get; set; }
+    public required MaterialDealLeg Paid { get; set; }
 
     [JsonProperty("Received")]
-    public MaterialDealLeg Received { get; set; }
+    public required MaterialDealLeg Received { get; set; }
 }

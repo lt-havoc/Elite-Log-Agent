@@ -44,7 +44,7 @@ public static class TestDeveloperTools
         ReplaceValue(output, "SquadronName", "Test Squadron");
         ReplaceValue(output, "Offender", "CriminalCommander");
         ReplaceValue(output, "ID", 1234);
-        if (input["event"].ToString() != "Statistics")
+        if (input["event"]?.ToString() != "Statistics")
             ReplaceValue(output, "Crew", "CrewName");
         return output;
     }
@@ -58,8 +58,8 @@ public static class TestDeveloperTools
     private static IEnumerable<string> ExtractSamples(this IEnumerable<JObject> events)
     {
         var eventGroups = from @event in events
-                          let eventName = @event.Property("event").Value.ToString()
-                          let timestamp = @event.Property("timestamp").Value.ToObject<DateTime>()
+                          let eventName = @event?.Property("event")?.Value.ToString()
+                          let timestamp = @event?.Property("timestamp")?.Value.ToObject<DateTime>()
                           orderby eventName ascending, timestamp descending
                           group @event by eventName into eventGroup
                           select eventGroup;

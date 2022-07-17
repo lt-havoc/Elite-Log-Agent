@@ -5,10 +5,10 @@ namespace DW.ELA.Interfaces.Events;
 public class Module
 {
     [JsonProperty("Slot")]
-    public string Slot { get; set; }
+    public required string Slot { get; set; }
 
     [JsonProperty("Item")]
-    public string Item { get; set; }
+    public required string Item { get; set; }
 
     [JsonProperty("On")]
     public bool On { get; set; }
@@ -23,7 +23,7 @@ public class Module
     public long? Value { get; set; }
 
     [JsonProperty("Engineering")]
-    public ModuleEngineering Engineering { get; set; }
+    public ModuleEngineering? Engineering { get; set; }
 
     [JsonProperty("AmmoInClip")]
     public long? AmmoInClip { get; set; }

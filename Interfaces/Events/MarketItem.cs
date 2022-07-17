@@ -8,16 +8,16 @@ public class MarketItem
     public long Id { get; set; }
 
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [JsonProperty("Name_Localised")]
-    public string NameLocalised { get; set; }
+    public string? NameLocalised { get; set; }
 
     [JsonProperty("Category")]
-    public string Category { get; set; }
+    public required string Category { get; set; }
 
     [JsonProperty("Category_Localised")]
-    public string CategoryLocalised { get; set; }
+    public string? CategoryLocalised { get; set; }
 
     [JsonProperty("BuyPrice")]
     public long BuyPrice { get; set; }
@@ -50,5 +50,5 @@ public class MarketItem
     public bool Rare { get; set; }
 
     [JsonProperty("Legality")]
-    public string Legality { get; set; }
+    public string? Legality { get; set; }
 }

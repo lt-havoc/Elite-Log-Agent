@@ -6,16 +6,16 @@ namespace DW.ELA.Interfaces.Events;
 public class Loadout : JournalEvent
 {
     [JsonProperty("Ship")]
-    public string Ship { get; set; }
+    public required string Ship { get; set; }
 
     [JsonProperty("ShipID")]
     public long ShipId { get; set; }
 
     [JsonProperty("ShipName")]
-    public string ShipName { get; set; }
+    public required string ShipName { get; set; }
 
     [JsonProperty("ShipIdent")]
-    public string ShipIdent { get; set; }
+    public required string ShipIdent { get; set; }
 
     [JsonProperty("HullValue")]
     public long? HullValue { get; set; }
@@ -33,7 +33,7 @@ public class Loadout : JournalEvent
     public double? HullHealth { get; set; }
 
     [JsonProperty("Modules")]
-    public Module[] Modules { get; set; }
+    public required Module[] Modules { get; set; }
 
     [JsonProperty]
     public double? UnladenMass { get; set; }
