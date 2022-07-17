@@ -41,13 +41,13 @@ public class MultiCmdrApiKeyControl : UserControl
     {
         var dataGrid = this.FindControl<DataGrid>("ApiKeyGrid");
         dataGrid.IsReadOnly = true;
-        dataGrid.SelectedItem = null;
-
+        
         // Current column isn't reset after editing a row. The first time adding a new row focuses the cmdr name
         // column text box. If the row editing ends with the api key column as the last text box that was
         // focused, the subsequent added row will focus on the api key column instead of cmdr name. Resetting
         // the current column fixes that.
         dataGrid.CurrentColumn = dataGrid.Columns.First();
+        dataGrid.SelectedItem = null;
     }
 
     private void OnApiKeyAdded(object? sender, ApiKeyAddedEventArgs e)
