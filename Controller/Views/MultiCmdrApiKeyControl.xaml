@@ -47,7 +47,7 @@
             </StackPanel.Styles>
             <Button Classes="Hyperlink" Command="{Binding OpenBrowser}" CommandParameter="{Binding ApiSettingsLink}" Content="Get API Key" Margin="0 0 10 0" />
             <Button Command="{Binding AddEmptyKey}" Content="Add" />
-            <Button Command="{Binding RemoveSelectedKeys}" Content="Remove" />
+            <Button Command="{Binding RemoveSelectedKeys}" Content="Remove" IsEnabled="{Binding RemoveEnabled}" />
             <Button Command="{Binding Validate}" Content="Validate" />
         </StackPanel>
         <ProgressBar Grid.Row="1" Height="3" MinHeight="3" IsIndeterminate="True" IsVisible="{Binding IsValidating}" />
