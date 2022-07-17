@@ -1,10 +1,12 @@
-namespace DW.ELA.Controller;
-
+using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DW.ELA.Interfaces;
+using DW.ELA.Utility;
+
+namespace DW.ELA.Controller;
 
 public class SavedGamesDirectoryHelper : ILogDirectoryNameProvider
 {
@@ -43,13 +45,18 @@ public class SavedGamesDirectoryHelper : ILogDirectoryNameProvider
     {
         var home = ExpandEnvVars("~");
         var user = ExpandEnvVars("$USER");
-        var potentialDirs = new[]
+        const string protonPath = "steamapps/compatdata/359320/pfx/drive_c/users/steamuser";
+        
+        var potentialDirs = new List<string>
         {
-            $"{home}/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser",
-            $"{home}/.local/share/Steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser",
+            $"{home}/.steam/steam/{protonPath}",
+            $"{home}/.local/share/Steam/{protonPath}",
             $"{home}/Games/elite-dangerous/drive_c/users/{user}", // lutris
             $"{home}/.wine/drive_c/users/{user}"
         };
+
+        if (GetSteamLibraryFolder($"{home}/.steam/root/config") is { } steamLibFolder)
+            potentialDirs.Insert(0, $"{steamLibFolder}/{protonPath}");
 
         foreach (var dir in potentialDirs)
         {
@@ -60,6 +67,16 @@ public class SavedGamesDirectoryHelper : ILogDirectoryNameProvider
         }
 
         throw new DirectoryNotFoundException("Failed to find the saved games directory.");
+    }
+
+    private static string? GetSteamLibraryFolder(string rootConfigPath)
+    {
+        var libraryFolders = Path.Combine(rootConfigPath, "libraryfolders.vdf");
+
+        if (!File.Exists(libraryFolders))
+            return null;
+
+        return SteamHelper.ParseAppLibraryPath("359320", File.ReadLines(libraryFolders));
     }
 
     private static string? ExpandEnvVars(string? name)
