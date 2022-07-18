@@ -31,7 +31,6 @@ public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
         this.saveSettings = saveSettings;
         ApiSettingsLink = apiSettingsLink;
         ApiKeys = new ObservableCollection<ApiKeyViewModel>(apiKeys.Select(kvp => new ApiKeyViewModel(kvp.Key, kvp.Value)));
-        ApiKeys.CollectionChanged += (_, _) => RemoveEnabled = ApiKeys.Count > 0;
     }
 
     public ObservableCollection<ApiKeyViewModel> ApiKeys { get; }
@@ -43,14 +42,7 @@ public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
     {
         get => isValidating;
         set => RaiseAndSetIfChanged(ref isValidating, value);
-    }
-
-    private bool removeEnabled;
-    public bool RemoveEnabled
-    {
-        get => removeEnabled;
-        set => RaiseAndSetIfChanged(ref removeEnabled, value);
-    }   
+    } 
 
     public override void SaveSettings()
     {
