@@ -17,13 +17,10 @@
         <TextBlock Text="Autorun agent on sign-in" IsVisible="{Binding ShowRunOnStartup}"  Grid.Row="0" Grid.Column="0" />
         <CheckBox IsChecked="{Binding RunOnStartup}" IsVisible="{Binding ShowRunOnStartup}" Grid.Row="0" Grid.Column="1" />
         
-        <TextBlock Text="Report errors to cloud service" Grid.Row="1" Grid.Column="0" />
-        <CheckBox IsChecked="{Binding LogToCloud}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="Log Level" Grid.Row="1" Grid.Column="0" />
+        <ComboBox Items="{Binding LogLevels}" SelectedItem="{Binding LogLevel}" Grid.Row="1" Grid.Column="1" />
         
-        <TextBlock Text="Log Level" Grid.Row="2" Grid.Column="0" />
-        <ComboBox Items="{Binding LogLevels}" SelectedItem="{Binding LogLevel}" Grid.Row="2" Grid.Column="1" />
-        
-        <TextBlock Text="Save Game Directory" Grid.Row="3" Grid.Column="0" />
-        <TextBox Text="{Binding SaveGameDir}" Watermark="Automatic" ToolTip.Tip="Leave blank to try and use default save game directory" Grid.Row="3" Grid.Column="1" />
+        <TextBlock Text="Save Game Directory" Grid.Row="2" Grid.Column="0" />
+        <TextBox Text="{Binding SaveGameDir}" Watermark="Automatic" ToolTip.Tip="Leave blank to try and use default save game directory" Grid.Row="2" Grid.Column="1" />
     </Grid>
 </UserControl>

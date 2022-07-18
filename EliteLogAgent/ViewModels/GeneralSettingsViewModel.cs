@@ -25,7 +25,6 @@ public class GeneralSettingsViewModel : AbstractSettingsViewModel
         }
 
         runOnStartup = autorunManager.AutorunEnabled;
-        logToCloud = settings.ReportErrorsToCloud;
         saveGameDir = settings.SaveGameDirectory;
         ShowRunOnStartup = autorunManager.CanManage;
     }
@@ -41,17 +40,6 @@ public class GeneralSettingsViewModel : AbstractSettingsViewModel
         {
             RaiseAndSetIfChanged(ref runOnStartup, value);
             autorunManager.AutorunEnabled = value;
-        }
-    }
-
-    private bool logToCloud;
-    public bool LogToCloud
-    {
-        get => logToCloud;
-        set
-        {
-            RaiseAndSetIfChanged(ref logToCloud, value);
-            GlobalSettings.ReportErrorsToCloud = value;
         }
     }
 

@@ -14,7 +14,6 @@ namespace DW.ELA.Controller;
 public class NLogSettingsManager : ILogSettingsBootstrapper
 {
     private const string DefaultLayout = "${longdate}|${level}|${logger}|${message} ${exception:format=ToString,StackTrace:innerFormat=ToString,StackTrace:maxInnerExceptionLevel=10}";
-    private const string CloudErrorReportingUrl = "https://app-telemetry.azurewebsites.net/api/post-errors";
 
     private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
     private readonly ISettingsProvider settingsProvider;

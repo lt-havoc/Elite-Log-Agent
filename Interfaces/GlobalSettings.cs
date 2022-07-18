@@ -16,9 +16,6 @@ public class GlobalSettings : ICloneable
     [JsonProperty("logLevel")]
     public string LogLevel { get; set; } = "Info";
 
-    [JsonProperty("reportErrorsToCloud")]
-    public bool ReportErrorsToCloud { get; set; } = true;
-
     [JsonProperty("saveGameDirectory")]
     public string? SaveGameDirectory { get; set; } = null;
 
