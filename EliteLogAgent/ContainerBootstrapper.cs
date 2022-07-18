@@ -1,7 +1,5 @@
-namespace EliteLogAgent;
-
+using System;
 using System.Runtime.InteropServices;
-using Autorun;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
 using Castle.Services.Logging.NLogIntegration;
@@ -9,9 +7,12 @@ using Castle.Windsor;
 using DW.ELA.Controller;
 using DW.ELA.Interfaces;
 using DW.ELA.Utility;
+using EliteLogAgent.Autorun;
 using EliteLogAgent.Deployment;
-using Notification;
-using ViewModels;
+using EliteLogAgent.Notification;
+using EliteLogAgent.ViewModels;
+
+namespace EliteLogAgent;
 
 internal static partial class ContainerBootstrapper
 {
@@ -28,8 +29,8 @@ internal static partial class ContainerBootstrapper
             Component.For<IRestClientFactory>().ImplementedBy<ThrottlingRestClient.Factory>());
 
         // Register core classes
+        container.RegisterLogDirNameProvider();
         container.Register(
-            Component.For<ILogDirectoryNameProvider>().ImplementedBy<SavedGamesDirectoryHelper>().LifestyleSingleton(),
             Component.For<ILogRealTimeDataSource>().ImplementedBy<JournalMonitor>().LifestyleSingleton(),
             Component.For<IPlayerStateHistoryRecorder>().ImplementedBy<PlayerStateRecorder>().LifestyleSingleton());
 
@@ -51,5 +52,19 @@ internal static partial class ContainerBootstrapper
         //     container.Register(Component.For<IAutorunManager>().ImplementedBy<PortableAutorunManager>().LifestyleTransient());
 
         container.Register(Component.For<MainWindowViewModel>().ImplementedBy<MainWindowViewModel>().LifestyleTransient());
+    }
+
+    private static void RegisterLogDirNameProvider(this IWindsorContainer container)
+    {
+        Type provider;
+
+        if (OperatingSystem.IsWindows())
+            provider = typeof(WindowsSavedGamesDirectoryProvider);
+        else if (OperatingSystem.IsLinux())
+            provider = typeof(LinuxSavedGamesDirectoryProvider);
+        else
+            throw new InvalidOperationException($"Attempted to register a log directory name provider for unsupported platform '{RuntimeInformation.OSDescription}'");
+
+        container.Register(Component.For<ILogDirectoryNameProvider>().ImplementedBy(provider).LifestyleSingleton());
     }
 }

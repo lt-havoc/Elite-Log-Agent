@@ -1,17 +1,18 @@
-namespace DW.ELA.UnitTests.INARA;
-
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DW.ELA.Controller;
+using DW.ELA.Interfaces;
+using DW.ELA.Interfaces.Settings;
 using DW.ELA.Plugin.Inara;
 using DW.ELA.Plugin.Inara.Model;
 using DW.ELA.UnitTests.Utility;
 using DW.ELA.Utility;
-using Interfaces;
-using Interfaces.Settings;
 using NUnit.Framework;
+
+namespace DW.ELA.UnitTests.INARA;
 
 [TestFixture]
 public class InaraIntegrationTests
@@ -27,7 +28,7 @@ public class InaraIntegrationTests
     [Explicit]
     public async Task IntegrationTestUploadToInara()
     {
-        var logEventSource = new JournalBurstPlayer(new SavedGamesDirectoryHelper(new SettingsProviderStub()).Directory, 5);
+        var logEventSource = new JournalBurstPlayer(CreateSavedGameDirProvider().Directory, 5);
         var logCounter = new JournalEventTypeCounter();
         var stateRecorder = new PlayerStateRecorder();
 
@@ -56,6 +57,17 @@ public class InaraIntegrationTests
 
         CollectionAssert.IsEmpty(results);
         Assert.Pass("Uploaded {0} events", convertedEvents.Length);
+    }
+    
+    private static ILogDirectoryNameProvider CreateSavedGameDirProvider()
+    {
+        var settingsProvider = new SettingsProviderStub();
+        if (OperatingSystem.IsWindows())
+            return new WindowsSavedGamesDirectoryProvider(settingsProvider);
+        if (OperatingSystem.IsLinux())
+            return new LinuxSavedGamesDirectoryProvider(settingsProvider);
+        
+        throw new InvalidOperationException($"Don't know where to find log files for platform '{RuntimeInformation.OSDescription}'");
     }
 
     private class SettingsProviderStub : ISettingsProvider

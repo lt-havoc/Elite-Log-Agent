@@ -1,5 +1,4 @@
-namespace DW.ELA.UnitTests;
-
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,11 +6,13 @@ using System.Linq;
 using System.Reflection;
 using DW.ELA.Controller;
 using DW.ELA.Interfaces;
+using DW.ELA.Interfaces.Settings;
 using DW.ELA.LogModel;
 using DW.ELA.Utility.Json;
-using Interfaces.Settings;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+namespace DW.ELA.UnitTests;
 
 public static class TestEventSource
 {
@@ -82,7 +83,16 @@ public static class TestEventSource
         }
     }
 
-    private static ILogDirectoryNameProvider CreateSavedGameDirHelper() => new SavedGamesDirectoryHelper(new SettingsProviderStub());
+    private static ILogDirectoryNameProvider CreateSavedGameDirHelper()
+    {
+        var settingsProvider = new SettingsProviderStub();
+        if (OperatingSystem.IsWindows())
+            return new WindowsSavedGamesDirectoryProvider(settingsProvider);
+        if (OperatingSystem.IsLinux())
+            return new LinuxSavedGamesDirectoryProvider(settingsProvider);
+        
+        throw new InvalidOperationException($"Don't know where to find log files for platform '{RuntimeInformation.OSDescription}'");
+    }
 
     private class SettingsProviderStub : ISettingsProvider
     {
