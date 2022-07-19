@@ -1,21 +1,20 @@
-namespace EliteLogAgent;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Castle.Windsor;
 using DW.ELA.Controller;
 using DW.ELA.Interfaces;
 using DW.ELA.Utility;
+using EliteLogAgent.ViewModels;
+using EliteLogAgent.Views;
 using NLog;
-using NLog.Fluent;
-using ViewModels;
-using Views;
+using Microsoft.Toolkit.Uwp.Notifications;
+
+namespace EliteLogAgent;
 
 public class App : Application
 {
@@ -33,12 +32,15 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var (viewModel, pluginManager) = Configure();
-
+        base.OnFrameworkInitializationCompleted();
+        
+        var container = Configure();
+        DataContext = container.Resolve<ApplicationViewModel>();
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var window = new MainWindow { DataContext = viewModel };
-            window.DataTemplates.Add(new PluginViewLocator(pluginManager.LoadedPlugins));
+            var window = new MainWindow { DataContext = container.Resolve<MainWindowViewModel>() };
+            window.DataTemplates.Add(new PluginViewLocator(container.Resolve<IPluginManager>().LoadedPlugins));
             window.DataTemplates.Add(new ViewLocator());
 #if !DEBUG
             window.Opened += (sender, args) => (sender as MainWindow)!.WindowState = WindowState.Minimized;
@@ -46,11 +48,9 @@ public class App : Application
             desktop.MainWindow = window;
             desktop.Exit += Shutdown;
         }
-
-        base.OnFrameworkInitializationCompleted();
     }
 
-    private (MainWindowViewModel, IPluginManager) Configure()
+    private IWindsorContainer Configure()
     {
         var container = new WindsorContainer();
         ContainerBootstrapper.Initalize(container);
@@ -81,7 +81,7 @@ public class App : Application
         disposables.Add(logMonitor.Subscribe(playerStateRecorder));
         disposables.Add(container);
 
-        return (container.Resolve<MainWindowViewModel>(), pluginManager);
+        return container;
     }
 
     private void Shutdown(object? sender, EventArgs e)
@@ -90,6 +90,9 @@ public class App : Application
             disposable.Dispose();
 
         Log.Info("Shutting down");
+#if WINDOWS10_1809_OR_GREATER
+        ToastNotificationManagerCompat.Uninstall();
+#endif
         LogManager.Shutdown();
     }
 }

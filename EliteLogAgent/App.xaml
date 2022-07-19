@@ -7,4 +7,23 @@
         <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
     </Application.Styles>
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/elite-dangerous.ico" ToolTipText="Avalonia Tray Icon ToolTip">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Settings" IsEnabled="False"/>
+                        <NativeMenuItem Header="About" IsEnabled="False"/>
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Browse Logs" Command="{Binding BrowseLogs}" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Report Issue" Icon="/Assets/github.ico" Command="{Binding ReportIssue}" />
+                        <NativeMenuItem Header="Changelog" Icon="/Assets/github.ico" Command="{Binding OpenChangelog}" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Exit" Command="{Binding Exit}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
 </Application>

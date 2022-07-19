@@ -1,15 +1,13 @@
-
-namespace DW.ELA.Controller.ViewModels;
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DW.ELA.Interfaces;
 using DW.ELA.Interfaces.Settings;
+using DW.ELA.Utility;
+
+namespace DW.ELA.Controller.ViewModels;
 
 public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
 {
@@ -92,42 +90,7 @@ public class MultiCmdrApiKeyViewModel : AbstractPluginSettingsViewModel
         IsValidating = false;
     }
 
-    public static void OpenBrowser(string url)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            // If no associated application/json MimeType is found xdg-open opens retrun error
-            // but it tries to open it anyway using the console editor (nano, vim, other..)
-            ShellExec($"xdg-open {url}");
-        }
-        else
-        {
-            using var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? url : "open",
-                Arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? $"-e {url}" : "",
-                CreateNoWindow = true,
-                UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            });
-        }
-    }
-
-    private static void ShellExec(string cmd, bool waitForExit = false)
-    {
-        var escapedArgs = cmd.Replace("\"", "\\\"");
-
-        using var process = Process.Start(new ProcessStartInfo
-        {
-            FileName = "/bin/sh",
-            Arguments = $"-c \"{escapedArgs}\"",
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            WindowStyle = ProcessWindowStyle.Hidden
-        });
-        if (waitForExit)
-            process?.WaitForExit();
-    }
+    public static void OpenBrowser(string url) => PlatformHelper.OpenUri(url);
 
     private void RemoveKeys(IEnumerable<ApiKeyViewModel> keys)
     {

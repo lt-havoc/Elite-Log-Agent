@@ -34,14 +34,8 @@ internal static partial class ContainerBootstrapper
             Component.For<ILogRealTimeDataSource>().ImplementedBy<JournalMonitor>().LifestyleSingleton(),
             Component.For<IPlayerStateHistoryRecorder>().ImplementedBy<PlayerStateRecorder>().LifestyleSingleton());
 
-        // TODO: register avalonia based tray icon controller 
         // Register UI classes. Need to initalize before log to enable tray icon
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<TrayIconController>().LifestyleSingleton());
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<FreeDesktopUserNotificationInterface>().LifestyleSingleton());
-        else
-            container.Register(Component.For<IUserNotificationInterface>().ImplementedBy<NoopUserNotificationService>().LifestyleSingleton());
+        container.RegisterNotificationInterface();
 
         // TODO: register autorun manager based on platform
         container.Register(Component.For<IAutorunManager>().ImplementedBy<ExternalAutorunManager>().LifestyleTransient());
@@ -51,19 +45,41 @@ internal static partial class ContainerBootstrapper
         // else
         //     container.Register(Component.For<IAutorunManager>().ImplementedBy<PortableAutorunManager>().LifestyleTransient());
 
+        container.RegisterViewModels();
+    }
+
+    private static void RegisterNotificationInterface(this IWindsorContainer container)
+    {
+        var @interface =
+#if WINDOWS10_1809_OR_GREATER
+            typeof(WindowsToastNotificationInterface);
+#elif WINDOWS
+            typeof(NoopUserNotificationService);
+#elif LINUX
+            typeof(FreeDesktopUserNotificationInterface);
+#else
+            throw new InvalidOperationException($"Attempted to register a notification interface for unsupported platform '{RuntimeInformation.OSDescription}'");
+#endif
+
+        container.Register(Component.For<IUserNotificationInterface>().ImplementedBy(@interface).LifestyleSingleton());
+    }
+
+    private static void RegisterViewModels(this IWindsorContainer container)
+    {
+        container.Register(Component.For<ApplicationViewModel>().ImplementedBy<ApplicationViewModel>().LifestyleTransient());
         container.Register(Component.For<MainWindowViewModel>().ImplementedBy<MainWindowViewModel>().LifestyleTransient());
     }
 
     private static void RegisterLogDirNameProvider(this IWindsorContainer container)
     {
-        Type provider;
-
-        if (OperatingSystem.IsWindows())
-            provider = typeof(WindowsSavedGamesDirectoryProvider);
-        else if (OperatingSystem.IsLinux())
-            provider = typeof(LinuxSavedGamesDirectoryProvider);
-        else
+        var provider =
+#if WINDOWS
+            typeof(WindowsSavedGamesDirectoryProvider);
+#elif LINUX
+            typeof(LinuxSavedGamesDirectoryProvider);
+#else
             throw new InvalidOperationException($"Attempted to register a log directory name provider for unsupported platform '{RuntimeInformation.OSDescription}'");
+#endif
 
         container.Register(Component.For<ILogDirectoryNameProvider>().ImplementedBy(provider).LifestyleSingleton());
     }
