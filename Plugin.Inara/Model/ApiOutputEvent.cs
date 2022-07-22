@@ -6,13 +6,8 @@ namespace DW.ELA.Plugin.Inara.Model;
 
 public sealed class ApiOutputEvent
 {
-    public ApiOutputEvent(object eventData)
-    {
-        EventData = eventData ?? throw new ArgumentNullException(nameof(eventData));
-    }
-
     [JsonProperty("eventData")]
-    public object EventData { get; internal set; }
+    public object? EventData { get; internal set; }
 
     /// <summary>
     /// Gets status of event processing as returned by API

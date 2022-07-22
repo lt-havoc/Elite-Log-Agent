@@ -15,7 +15,7 @@ internal struct ApiOutputBatch
     public Header Header;
 
     [JsonProperty("events")]
-    public IList<ApiOutputEvent> Events;
+    public IList<ApiOutputEvent>? Events;
 
     public override readonly string ToString() => Serialize.ToJson(this);
 }

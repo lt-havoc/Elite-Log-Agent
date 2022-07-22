@@ -99,7 +99,7 @@ public class InaraApiFacade
         var result = (await ApiCall(@event)).SingleOrDefault();
         if (result == null)
             throw new ApplicationException("Null result from API");
-        string cmdrName = (result.EventData as dynamic).commanderName ?? "Error: cmdr name was not returned";
+        string cmdrName = (result.EventData as dynamic)?.commanderName ?? "Error: cmdr name was not returned";
         return cmdrName;
     }
 
