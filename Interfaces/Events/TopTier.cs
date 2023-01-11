@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
-{
-    public class TopTier
-    {
-        [JsonProperty("Name")]
-        public string Name { get; set; }
+namespace DW.ELA.Interfaces.Events;
 
-        [JsonProperty("Bonus")]
-        public string Bonus { get; set; }
-    }
+public class TopTier
+{
+    [JsonProperty("Name")]
+    public required string Name { get; set; }
+
+    [JsonProperty("Bonus")]
+    public required string Bonus { get; set; }
 }

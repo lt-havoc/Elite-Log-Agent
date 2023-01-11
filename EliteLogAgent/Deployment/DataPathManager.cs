@@ -1,18 +1,21 @@
-﻿using System;
+namespace EliteLogAgent.Deployment;
+
+using System;
 using System.IO;
 using DW.ELA.Interfaces;
-using DW.ELA.Utility;
 
-namespace EliteLogAgent.Deployment
+public class DataPathManager : IPathManager
 {
-    public class DataPathManager : IPathManager
-    {
-        public string SettingsDirectory => AppInfo.IsNetworkDeployed ? AppDataDirectory : LocalDirectory;
+    // TODO: set based on deployment method
+    // public string SettingsDirectory => AppInfo.IsNetworkDeployed ? AppDataDirectory : LocalDirectory;
+    //
+    // public string LogDirectory => AppInfo.IsNetworkDeployed ? Path.Combine(AppDataDirectory, "Log") : Path.Combine(LocalDirectory, "Log");
 
-        public string LogDirectory => AppInfo.IsNetworkDeployed ? Path.Combine(AppDataDirectory, "Log") : Path.Combine(LocalDirectory, "Log");
+    public string SettingsDirectory => LocalDirectory;
 
-        private string AppDataDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EliteLogAgent");
+    public string LogDirectory => Path.Combine(LocalDirectory, "Log");
 
-        private string LocalDirectory => Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).LocalPath);
-    }
+    private string AppDataDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "EliteLogAgent");
+
+    private string LocalDirectory => Path.GetDirectoryName(new Uri(typeof(Program).Assembly.Location).LocalPath)!;
 }

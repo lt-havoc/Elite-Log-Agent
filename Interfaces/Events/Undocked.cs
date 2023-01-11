@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public class Undocked : JournalEvent
 {
-    public class Undocked : JournalEvent
-    {
-        [JsonProperty("StationName")]
-        public string StationName { get; set; }
+    [JsonProperty("StationName")]
+    public required string StationName { get; set; }
 
-        [JsonProperty("StationType")]
-        public string StationType { get; set; }
+    [JsonProperty("StationType")]
+    public required string StationType { get; set; }
 
-        [JsonProperty("MarketID")]
-        public long MarketId { get; set; }
-    }
+    [JsonProperty("MarketID")]
+    public long MarketId { get; set; }
 }

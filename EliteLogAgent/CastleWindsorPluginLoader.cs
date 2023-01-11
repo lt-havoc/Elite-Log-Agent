@@ -1,4 +1,6 @@
-﻿using System;
+namespace EliteLogAgent;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,67 +10,68 @@ using Castle.Windsor;
 using DW.ELA.Interfaces;
 using NLog;
 
-namespace EliteLogAgent
+internal class CastleWindsorPluginLoader : IPluginManager
 {
-    internal class CastleWindsorPluginLoader : IPluginManager
+    private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+
+    private readonly IWindsorContainer container;
+
+    public CastleWindsorPluginLoader(IWindsorContainer container)
     {
-        private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
+        this.container = container;
+    }
 
-        private readonly IWindsorContainer container;
+    public IReadOnlyCollection<string> LoadedPluginIds => Plugins.Select(p => p.PluginId).ToArray();
 
-        public CastleWindsorPluginLoader(IWindsorContainer container)
+    public IReadOnlyCollection<IPlugin> LoadedPlugins => Plugins.ToArray();
+
+    public IList<IPlugin> Plugins => container.ResolveAll<IPlugin>();
+
+    public IPlugin? GetPluginById(string pluginId) => Plugins.SingleOrDefault(p => p.PluginId == pluginId);
+
+    public void LoadPlugin(string pluginAssemblyName)
+    {
+        try
         {
-            this.container = container;
+            string? assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            if (assemblyDirectory == null)
+                throw new FileNotFoundException();
+
+            if (!pluginAssemblyName.EndsWith(".dll"))
+                pluginAssemblyName += ".dll";
+
+            container.Register(Classes
+                .FromAssemblyNamed(Path.Combine(assemblyDirectory, pluginAssemblyName))
+                .BasedOn<IPlugin>()
+                .WithService
+                .FromInterface()
+                .LifestyleSingleton());
         }
-
-        public IReadOnlyCollection<string> LoadedPluginIds => Plugins.Select(p => p.PluginId).ToArray();
-
-        public IReadOnlyCollection<IPlugin> LoadedPlugins => Plugins.ToArray();
-
-        public IList<IPlugin> Plugins => container.ResolveAll<IPlugin>();
-
-        public IPlugin GetPluginById(string pluginId) => Plugins.SingleOrDefault(p => p.PluginId == pluginId);
-
-        public void LoadPlugin(string pluginAssemblyName)
+        catch (FileNotFoundException e)
         {
-            try
-            {
-                string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                if (!pluginAssemblyName.EndsWith(".dll"))
-                    pluginAssemblyName += ".dll";
-
-                container.Register(Classes
-                    .FromAssemblyNamed(Path.Combine(assemblyDirectory, pluginAssemblyName))
-                    .BasedOn<IPlugin>()
-                    .WithService
-                    .FromInterface()
-                    .LifestyleSingleton());
-            }
-            catch (FileNotFoundException e)
-            {
-                Log.Warn(e, $"Plugin assembly not found {pluginAssemblyName}");
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, $"Error while loading plugin: {pluginAssemblyName}");
-            }
+            Log.Warn(e, $"Plugin assembly not found {pluginAssemblyName}");
         }
-
-        public void LoadEmbeddedPlugins()
+        catch (Exception e)
         {
-            try
-            {
-                container.Register(Classes
-                    .FromAssembly(Assembly.GetExecutingAssembly())
-                    .BasedOn<IPlugin>()
-                    .WithService
-                    .FromInterface()
-                    .LifestyleSingleton());
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Error while loading embedded plugins");
-            }
+            Log.Error(e, $"Error while loading plugin: {pluginAssemblyName}");
+        }
+    }
+
+    public void LoadEmbeddedPlugins()
+    {
+        try
+        {
+            container.Register(Classes
+                .FromAssembly(typeof(CastleWindsorPluginLoader).Assembly)
+                .BasedOn<IPlugin>()
+                .WithService
+                .FromInterface()
+                .LifestyleSingleton());
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "Error while loading embedded plugins");
         }
     }
 }

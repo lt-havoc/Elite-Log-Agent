@@ -1,9 +1,3 @@
-﻿using System.Reflection;
+﻿namespace EliteLogAgent.Autorun;
 
-namespace EliteLogAgent.Autorun
-{
-    public class PortableAutorunManager : ClickOnceAutorunManager
-    {
-        protected override string ExecutablePath => Assembly.GetExecutingAssembly().Location;
-    }
-}
+using System.Reflection;

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace DW.ELA.Utility.App
+namespace DW.ELA.Utility.App;
+
+public static class EliteDangerous
 {
-    public static class EliteDangerous
-    {
-        public static bool IsRunning => Process.GetProcessesByName("EliteDangerous64").Length > 0;
-    }
+    // TODO: implement linux/proton check
+    public static bool IsRunning => Process.GetProcessesByName("EliteDangerous64").Length > 0;
 }

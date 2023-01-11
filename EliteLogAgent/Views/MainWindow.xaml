@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="EliteLogAgent.Views.MainWindow"
+        Title="{Binding Title}" Width="550" Height="300">
+    <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto, 1.5*" Margin="5">
+        <ListBox Items="{Binding SettingsControls}" SelectedItem="{Binding SelectedItem}" Margin="0 0 0 5" Grid.Row="0" Grid.Column="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Key}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Button Command="{Binding ApplyChanges}">Apply Changes</Button>
+        </StackPanel>
+        <ContentControl Content="{Binding SelectedViewModel}" Margin="5 0 0 0" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
+    </Grid>
+</Window>

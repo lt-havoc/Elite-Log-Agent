@@ -1,11 +1,10 @@
 ﻿using DW.ELA.Interfaces;
 using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public class EngineerProgress : JournalEvent
 {
-    public class EngineerProgress : JournalEvent
-    {
-        [JsonProperty("Engineers")]
-        public EngineerProgressRecord[] Engineers { get; set; }
-    }
+    [JsonProperty("Engineers")]
+    public required EngineerProgressRecord[] Engineers { get; set; }
 }

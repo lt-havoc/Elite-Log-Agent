@@ -4,57 +4,56 @@ using System.Linq;
 using DW.ELA.Utility.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.UnitTests.Utility
+namespace DW.ELA.UnitTests.Utility;
+
+public static class JsonComparer
 {
-    public static class JsonComparer
+    public static IList<string> Compare(string tokenName, JObject source, JObject target)
     {
-        public static IList<string> Compare(string tokenName, JObject source, JObject target)
+        var diffs = new List<string>();
+        var srcPropertyNames = source.Properties().Select(p => p.Name).ToList();
+        var tgtPropertyNames = target.Properties().Select(p => p.Name).ToList();
+        diffs.AddRange(srcPropertyNames.Except(tgtPropertyNames).Select(p => tokenName + ": missing on right side: " + p));
+        diffs.AddRange(tgtPropertyNames.Except(srcPropertyNames).Select(p => tokenName + ": missing on left side: " + p));
+
+        foreach (string property in srcPropertyNames.Intersect(tgtPropertyNames))
+            diffs.AddRange(Compare($"{tokenName}.{property}", source[property], target[property]));
+
+        return diffs;
+    }
+
+    public static IList<string> Compare(string tokenName, JToken? t1, JToken? t2)
+    {
+        var diffs = new List<string>();
+        if (t1?.GetType() != t2?.GetType())
         {
-            var diffs = new List<string>();
-            var srcPropertyNames = source.Properties().Select(p => p.Name).ToList();
-            var tgtPropertyNames = target.Properties().Select(p => p.Name).ToList();
-            diffs.AddRange(srcPropertyNames.Except(tgtPropertyNames).Select(p => tokenName + ": missing on right side: " + p));
-            diffs.AddRange(tgtPropertyNames.Except(srcPropertyNames).Select(p => tokenName + ": missing on left side: " + p));
-
-            foreach (string property in srcPropertyNames.Intersect(tgtPropertyNames))
-                diffs.AddRange(Compare($"{tokenName}.{property}", source[property], target[property]));
-
-            return diffs;
+            diffs.Add($"{tokenName}: Different types: {t1?.GetType().ToString() ?? "null"} vs {t2?.GetType().ToString() ?? "null"}");
         }
-
-        public static IList<string> Compare(string tokenName, JToken t1, JToken t2)
+        else
         {
-            var diffs = new List<string>();
-            if (t1?.GetType() != t2?.GetType())
+            switch (t1, t2)
             {
-                diffs.Add($"{tokenName}: Different types: {t1?.GetType().ToString() ?? "null"} vs {t2?.GetType().ToString() ?? "null"}");
+                case (JArray a1, JArray a2):
+                    return Compare(tokenName, a1, a2);
+                case (JObject o1, JObject o2):
+                    return Compare(tokenName, o1, o2);
+                default:
+                    if (t1?.ToString() != t2?.ToString())
+                        return new[] { $"{tokenName}: expected {t1}, got {t2}" };
+                    break;
             }
-            else
-            {
-                switch (t1)
-                {
-                    case JArray _:
-                        return Compare(tokenName, t1 as JArray, t2 as JArray);
-                    case JObject _:
-                        return Compare(tokenName, t1 as JObject, t2 as JObject);
-                    default:
-                        if (t1.ToString() != t2.ToString())
-                            return new[] { $"{tokenName}: expected {t1}, got {t2}" };
-                        break;
-                }
-            }
-            return diffs;
         }
+        return diffs;
+    }
 
-        public static IList<string> Compare(string tokenName, JArray source, JArray target, string arrayName = "")
-        {
-            var diffs = new List<string>();
-            if (source.Count != target.Count)
-                diffs.Add($"Array length differs: {source.Count} vs {target.Count}");
-            for (int i = 0; i < Math.Min(source.Count, target.Count); i++)
-                diffs.AddRange(Compare($"{tokenName}[{i}]", source[i], target[i]));
+    public static IList<string> Compare(string tokenName, JArray source, JArray target, string arrayName = "")
+    {
+        var diffs = new List<string>();
+        if (source.Count != target.Count)
+            diffs.Add($"Array length differs: {source.Count} vs {target.Count}");
+        for (int i = 0; i < Math.Min(source.Count, target.Count); i++)
+            diffs.AddRange(Compare($"{tokenName}[{i}]", source[i], target[i]));
 
-            return diffs;
-        }
+        return diffs;
     }
 }

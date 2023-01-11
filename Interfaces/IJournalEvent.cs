@@ -1,12 +1,11 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface IJournalEvent
 {
-    public interface IJournalEvent
-    {
-        string Event { get; }
-        JObject Raw { get; }
-        DateTime Timestamp { get; }
-    }
+    string Event { get; }
+    JObject Raw { get; }
+    DateTime Timestamp { get; }
 }

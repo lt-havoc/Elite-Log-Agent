@@ -1,4 +1,6 @@
-﻿using System;
+﻿namespace DW.ELA.Utility;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,87 +11,84 @@ using System.Web;
 using DW.ELA.Interfaces;
 using DW.ELA.Utility.Log;
 
-namespace DW.ELA.Utility
+public class ThrottlingRestClient : IRestClient
 {
-    public class ThrottlingRestClient : IRestClient
+    private readonly string baseUrl;
+    private readonly HttpClient client = new();
+    private readonly object @lock = new();
+
+    private DateTime lastRequestTimestamp = DateTime.MinValue;
+    private int requestCounter;
+
+    static ThrottlingRestClient()
     {
-        private readonly string baseUrl;
-        private readonly HttpClient client = new();
-        private readonly object @lock = new();
+        ServicePointManager.Expect100Continue = true;
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+    }
 
-        private DateTime lastRequestTimestamp = DateTime.MinValue;
-        private int requestCounter;
+    internal ThrottlingRestClient(string url)
+    {
+        baseUrl = url;
+        client.DefaultRequestHeaders.Add("X-Requested-With", "EliteLogAgent");
+    }
 
-        static ThrottlingRestClient()
+    public async Task<string> PostAsync(string input)
+    {
+        ThrowIfQuotaExceeded();
+        var httpContent = new StringContent(input, Encoding.UTF8, "application/json");
+        using (new LoggingTimer("Making request to " + baseUrl))
         {
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var response = await client.PostAsync(baseUrl, httpContent);
+            return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
         }
+    }
 
-        internal ThrottlingRestClient(string url)
+    public async Task<string> PostAsync(IDictionary<string, string> values)
+    {
+        ThrowIfQuotaExceeded();
+
+        string encodedPost = string.Join("&", values.Select(kvp => kvp.Key + "=" + HttpUtility.UrlEncode(kvp.Value)));
+
+        var httpContent = new StringContent(encodedPost, Encoding.UTF8, "application/x-www-form-urlencoded");
+
+        using (new LoggingTimer("Making request to " + baseUrl))
         {
-            baseUrl = url;
-            client.DefaultRequestHeaders.Add("X-Requested-With", "EliteLogAgent");
+            var response = await client.PostAsync(baseUrl, httpContent);
+            return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
         }
+    }
 
-        public async Task<string> PostAsync(string input)
+    public async Task<string> GetAsync(string url)
+    {
+        ThrowIfQuotaExceeded();
+        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            url = baseUrl + url;
+        using (new LoggingTimer("Making request to " + url))
         {
-            ThrowIfQuotaExceeded();
-            var httpContent = new StringContent(input, Encoding.UTF8, "application/json");
-            using (new LoggingTimer("Making request to " + baseUrl))
-            {
-                var response = await client.PostAsync(baseUrl, httpContent);
-                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
-            }
+            var response = await client.GetAsync(url);
+            return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
         }
+    }
 
-        public async Task<string> PostAsync(IDictionary<string, string> values)
+    private void ThrowIfQuotaExceeded()
+    {
+        lock (@lock)
         {
-            ThrowIfQuotaExceeded();
+            var now = DateTime.UtcNow;
+            int secondsSinceLastCall = 0;
 
-            string encodedPost = string.Join("&", values.Select(kvp => kvp.Key + "=" + HttpUtility.UrlEncode(kvp.Value)));
+            if (lastRequestTimestamp != DateTime.MinValue)
+                secondsSinceLastCall = (int)(now - lastRequestTimestamp).TotalSeconds;
 
-            var httpContent = new StringContent(encodedPost, Encoding.UTF8, "application/x-www-form-urlencoded");
+            int decayedRequestCounter = Math.Max(0, requestCounter - (secondsSinceLastCall / 5));
 
-            using (new LoggingTimer("Making request to " + baseUrl))
-            {
-                var response = await client.PostAsync(baseUrl, httpContent);
-                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
-            }
+            lastRequestTimestamp = now;
+            requestCounter = decayedRequestCounter + 1;
         }
+    }
 
-        public async Task<string> GetAsync(string url)
-        {
-            ThrowIfQuotaExceeded();
-            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                url = baseUrl + url;
-            using (new LoggingTimer("Making request to " + url))
-            {
-                var response = await client.GetAsync(url);
-                return await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
-            }
-        }
-
-        private void ThrowIfQuotaExceeded()
-        {
-            lock (@lock)
-            {
-                var now = DateTime.UtcNow;
-                int secondsSinceLastCall = 0;
-
-                if (lastRequestTimestamp != DateTime.MinValue)
-                    secondsSinceLastCall = (int)(now - lastRequestTimestamp).TotalSeconds;
-
-                int decayedRequestCounter = Math.Max(0, requestCounter - (secondsSinceLastCall / 5));
-
-                lastRequestTimestamp = now;
-                requestCounter = decayedRequestCounter + 1;
-            }
-        }
-
-        public class Factory : IRestClientFactory
-        {
-            public IRestClient CreateRestClient(string url) => new ThrottlingRestClient(url);
-        }
+    public class Factory : IRestClientFactory
+    {
+        public IRestClient CreateRestClient(string url) => new ThrottlingRestClient(url);
     }
 }

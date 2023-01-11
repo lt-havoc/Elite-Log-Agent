@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface IPluginManager
 {
-    public interface IPluginManager
-    {
-        IReadOnlyCollection<string> LoadedPluginIds { get; }
+    IReadOnlyCollection<string> LoadedPluginIds { get; }
 
-        IReadOnlyCollection<IPlugin> LoadedPlugins { get; }
+    IReadOnlyCollection<IPlugin> LoadedPlugins { get; }
 
-        IPlugin GetPluginById(string pluginId);
+    IPlugin? GetPluginById(string pluginId);
 
-        void LoadPlugin(string pluginAssemblyName);
+    void LoadPlugin(string pluginAssemblyName);
 
-        void LoadEmbeddedPlugins();
-    }
+    void LoadEmbeddedPlugins();
 }

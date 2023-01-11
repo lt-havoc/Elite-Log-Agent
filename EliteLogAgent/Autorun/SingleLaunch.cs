@@ -1,12 +1,11 @@
-﻿using System;
+﻿namespace EliteLogAgent;
+
+using System;
 using System.Threading;
 
-namespace EliteLogAgent
+public static class SingleLaunch
 {
-    public static class SingleLaunch
-    {
-        private static readonly Mutex mutex = new(true, "EliteLogAgent");
+    private static readonly Mutex mutex = new(true, @"Global\EliteLogAgent");
 
-        public static bool IsRunning => !mutex.WaitOne(TimeSpan.FromSeconds(3), true);
-    }
+    public static bool IsRunning => !mutex.WaitOne(TimeSpan.FromSeconds(3), true);
 }

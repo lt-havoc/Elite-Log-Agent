@@ -1,14 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\DW.ELA.Utility\DW.ELA.Utility.csproj" />
-    <ProjectReference Include="..\Interfaces\DW.ELA.Interfaces.csproj" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
   </ItemGroup>
-
+  <ItemGroup>
+    <None Remove="Schemas\blackmarket-v1.0.json" />
+    <None Remove="Schemas\commodity-v3.0.json" />
+    <None Remove="Schemas\journal-v1.0.json" />
+    <None Remove="Schemas\outfitting-v2.0.json" />
+    <None Remove="Schemas\shipyard-v2.0.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Controller\DW.ELA.Controller.csproj" />
+    <ProjectReference Include="..\Interfaces\DW.ELA.Interfaces.csproj" />
+    <ProjectReference Include="..\DW.ELA.Utility\DW.ELA.Utility.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.16" />
+    <PackageReference Include="Namotion.Reflection" Version="2.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NJsonSchema" Version="10.7.2" />
+    <PackageReference Include="NLog" Version="5.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Schemas\blackmarket-v1.0.json" />
+    <EmbeddedResource Include="Schemas\commodity-v3.0.json" />
+    <EmbeddedResource Include="Schemas\journal-v1.0.json" />
+    <EmbeddedResource Include="Schemas\outfitting-v2.0.json" />
+    <EmbeddedResource Include="Schemas\shipyard-v2.0.json" />
+  </ItemGroup>
 </Project>

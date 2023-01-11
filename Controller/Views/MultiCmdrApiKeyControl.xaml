@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:DW.ELA.Controller.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DW.ELA.Controller.Views.MultiCmdrApiKeyControl">
+    <UserControl.Resources>
+        <local:ValidityToPathConverter x:Key="ValidityToPathConverter" />
+        <local:ValidityToBrushConverter x:Key="ValidityToBrushConverter" />
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Button.Hyperlink">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#0000EE" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter Content="{TemplateBinding Content}">
+                        <ContentPresenter.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="{TemplateBinding Foreground}"/>
+                                <Setter Property="FontSize" Value="{TemplateBinding FontSize}"/>
+                                <Setter Property="TextDecorations">
+                                    <TextDecorationCollection>
+                                        <TextDecoration Location="Underline" StrokeOffsetUnit="Pixel" StrokeOffset="2" />
+                                    </TextDecorationCollection>
+                                </Setter>
+                            </Style>
+                        </ContentPresenter.Styles>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.Hyperlink:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto, 3, Auto, Auto">
+        <StackPanel Grid.Row="0" Margin="0 0 0 5" Orientation="Horizontal">
+            <StackPanel.Styles>
+                <Style Selector="Button">
+                    <Setter Property="Margin" Value="5 0 5 0" />
+                </Style>
+            </StackPanel.Styles>
+            <Button Classes="Hyperlink" Command="{Binding OpenBrowser}" CommandParameter="{Binding ApiSettingsLink}" Content="Get API Key" Margin="0 0 10 0" />
+            <Button Command="{Binding AddEmptyKey}" Content="Add" />
+            <Button Command="{Binding RemoveSelectedKeys}" Content="Remove" IsEnabled="{Binding ApiKeys.Count}" />
+            <Button Command="{Binding Validate}" Content="Validate" IsEnabled="{Binding ApiKeys.Count}" />
+        </StackPanel>
+        <ProgressBar Grid.Row="1" Height="3" MinHeight="3" IsIndeterminate="True" IsVisible="{Binding IsValidating}" />
+        <DataGrid Grid.Row="2" Name="ApiKeyGrid" IsReadOnly="True" Items="{Binding ApiKeys}" Margin="0 5 0 0" SelectionChanged="ApiKeyGrid_SelectionChanged" DoubleTapped="ApiKeyGrid_DoubleTapped" RowEditEnded="ApiKeyGrid_RowEditEnded" SelectionMode="Extended" AutoGenerateColumns="False" HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CMDR" Binding="{Binding Commander}" Width="Auto" />
+                <DataGridTextColumn Header="Api Key" Binding="{Binding Key}"  Width="*" />
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Path Data="{Binding Validity, Converter={StaticResource ValidityToPathConverter}}" Fill="{Binding Validity, Converter={StaticResource ValidityToBrushConverter}}" ToolTip.Tip="{Binding Validity}" Width="16" Height="16" Stretch="Fill" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Grid.Row="3" Content="No API Keys Saved" HorizontalAlignment="Stretch" IsVisible="{Binding !ApiKeys.Count}" BorderBrush="{Binding #ApiKeyGrid.BorderBrush}" BorderThickness="1 0 1 1" />
+    </Grid>
+</UserControl>

@@ -2,25 +2,24 @@
 using DW.ELA.Utility.Json;
 using Newtonsoft.Json;
 
-namespace DW.ELA.Plugin.Inara.Model
+namespace DW.ELA.Plugin.Inara.Model;
+
+public sealed class ApiInputEvent
 {
-    public sealed class ApiInputEvent
+    public ApiInputEvent(string eventName)
     {
-        public ApiInputEvent(string eventName)
-        {
-            EventName = eventName;
-        }
-
-        [JsonProperty("eventName")]
-        public string EventName { get; }
-
-        [JsonProperty("eventTimestamp")]
-        public DateTime Timestamp { get; internal set; }
-
-        [JsonProperty("eventData")]
-        public object EventData { get; internal set; }
-
-
-        public override string ToString() => Serialize.ToJson(this);
+        EventName = eventName;
     }
+
+    [JsonProperty("eventName")]
+    public string EventName { get; }
+
+    [JsonProperty("eventTimestamp")]
+    public DateTime Timestamp { get; internal set; }
+
+    [JsonProperty("eventData")]
+    public object? EventData { get; internal set; }
+
+
+    public override string ToString() => Serialize.ToJson(this);
 }

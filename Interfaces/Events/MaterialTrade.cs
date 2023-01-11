@@ -1,19 +1,18 @@
 ﻿using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public class MaterialTrade : JournalEvent
 {
-    public class MaterialTrade : JournalEvent
-    {
-        [JsonProperty("MarketID")]
-        public long MarketId { get; set; }
+    [JsonProperty("MarketID")]
+    public long MarketId { get; set; }
 
-        [JsonProperty("TraderType")]
-        public string TraderType { get; set; }
+    [JsonProperty("TraderType")]
+    public required string TraderType { get; set; }
 
-        [JsonProperty("Paid")]
-        public MaterialDealLeg Paid { get; set; }
+    [JsonProperty("Paid")]
+    public required MaterialDealLeg Paid { get; set; }
 
-        [JsonProperty("Received")]
-        public MaterialDealLeg Received { get; set; }
-    }
+    [JsonProperty("Received")]
+    public required MaterialDealLeg Received { get; set; }
 }

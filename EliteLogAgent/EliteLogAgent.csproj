@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworks>net7.0;net7.0-windows10.0.17763.0</TargetFrameworks>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageLicenseExpression>mit</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/DarkWanderer/Elite-Log-Agent</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DarkWanderer/Elite-Log-Agent</RepositoryUrl>
@@ -12,22 +12,46 @@
     <Authors>CMDR John Kozak</Authors>
     <PackageId>Elite Log Agent</PackageId>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-windows10.0.17763.0'">
+    <DefineConstants>WINDOWS10_1809_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <DefineConstants>WINDOWS</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <DefineConstants>LINUX</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Castle.Core-NLog">
-      <Version>4.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="Castle.LoggingFacility">
-      <Version>5.1.1</Version>
-    </PackageReference>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.16" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.16" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.16" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Castle.Core" Version="4.4.1" />
+    <PackageReference Include="Castle.Core-NLog" Version="4.4.1" />
+    <PackageReference Include="Castle.LoggingFacility" Version="5.1.2" />
+    <PackageReference Include="Castle.Windsor" Version="5.1.2" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
+    <PackageReference Include="NLog" Version="5.0.1" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Controller\DW.ELA.Controller.csproj" />
     <ProjectReference Include="..\DW.ELA.Plugin.EDDN\DW.ELA.Plugin.EDDN.csproj" />
-    <ProjectReference Include="..\DW.ELA.Utility\DW.ELA.Utility.csproj" />
     <ProjectReference Include="..\Interfaces\DW.ELA.Interfaces.csproj" />
     <ProjectReference Include="..\Plugin.EDSM\DW.ELA.Plugin.EDSM.csproj" />
     <ProjectReference Include="..\Plugin.Inara\DW.ELA.Plugin.Inara.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets" />
   </ItemGroup>
 </Project>

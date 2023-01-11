@@ -1,25 +1,24 @@
 ﻿using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public class CrimeStatistics
 {
-    public class CrimeStatistics
-    {
-        [JsonProperty("Notoriety")]
-        public long Notoriety { get; set; }
+    [JsonProperty("Notoriety")]
+    public long Notoriety { get; set; }
 
-        [JsonProperty("Fines")]
-        public long Fines { get; set; }
+    [JsonProperty("Fines")]
+    public long Fines { get; set; }
 
-        [JsonProperty("Total_Fines")]
-        public long TotalFines { get; set; }
+    [JsonProperty("Total_Fines")]
+    public long TotalFines { get; set; }
 
-        [JsonProperty("Bounties_Received")]
-        public long BountiesReceived { get; set; }
+    [JsonProperty("Bounties_Received")]
+    public long BountiesReceived { get; set; }
 
-        [JsonProperty("Total_Bounties")]
-        public long TotalBounties { get; set; }
+    [JsonProperty("Total_Bounties")]
+    public long TotalBounties { get; set; }
 
-        [JsonProperty("Highest_Bounty")]
-        public long HighestBounty { get; set; }
-    }
+    [JsonProperty("Highest_Bounty")]
+    public long HighestBounty { get; set; }
 }

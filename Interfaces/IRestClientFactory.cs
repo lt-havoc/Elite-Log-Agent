@@ -1,7 +1,6 @@
-﻿namespace DW.ELA.Interfaces
+﻿namespace DW.ELA.Interfaces;
+
+public interface IRestClientFactory
 {
-    public interface IRestClientFactory
-    {
-        IRestClient CreateRestClient(string url);
-    }
+    IRestClient CreateRestClient(string url);
 }

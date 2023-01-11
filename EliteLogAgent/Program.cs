@@ -1,74 +1,41 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using Castle.Windsor;
-using DW.ELA.Controller;
-using DW.ELA.Interfaces;
-using DW.ELA.Utility;
+namespace EliteLogAgent;
+
+using System;
+using Avalonia;
 using NLog;
-using NLog.Fluent;
 
-namespace EliteLogAgent
+class Program
 {
-    internal static partial class Program
+    private static readonly ILogger RootLog = LogManager.GetCurrentClassLogger();
+
+    // Initialization code. Don't use any Avalonia, third-party APIs or any
+    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+    // yet and stuff might break.
+    public static void Main(string[] args)
     {
-        private static readonly ILogger RootLog = LogManager.GetCurrentClassLogger();
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        if (SingleLaunch.IsRunning)
+            return; // only one instance should be running
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        internal static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-            if (SingleLaunch.IsRunning)
-                return; // only one instance should be running
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
 
-            using var container = new WindsorContainer();
-            ContainerBootstrapper.Initalize(container);
+    // Avalonia configuration, don't remove; also used by visual designer.
+    public static AppBuilder BuildAvaloniaApp()
+        => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace();
 
-            // Setup logs
-            container.Resolve<ILogSettingsBootstrapper>().Setup();
-            RootLog.Info()
-                .Message("Application started")
-                .Property("version", AppInfo.Version)
-                .Write();
+    private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        var message = e.IsTerminating ? "Unhandled fatal exception" : "Unhandled exception";
+        var senderString = sender?.GetType()?.ToString() ?? "unknown";
+        var exceptionTypeString = e.ExceptionObject?.GetType()?.ToString() ?? "unknown";
+        var exceptionObjectString = e.ExceptionObject?.ToString() ?? "unknown";
 
-            // Load plugins
-            var pluginManager = container.Resolve<IPluginManager>();
-            pluginManager.LoadPlugin("DW.ELA.Plugin.Inara");
-            pluginManager.LoadPlugin("DW.ELA.Plugin.EDDN");
-            pluginManager.LoadPlugin("DW.ELA.Plugin.EDSM");
-            pluginManager.LoadEmbeddedPlugins();
-
-            var logMonitor = container.Resolve<ILogRealTimeDataSource>();
-            var trayController = container.Resolve<IUserNotificationInterface>();
-            var playerStateRecorder = container.Resolve<IPlayerStateHistoryRecorder>();
-
-            // subscription 'token' is IDisposable
-            // subscribing the PlayerStateRecorder first to avoid potential issues with out-of-order execution because of threading
-            using (logMonitor.Subscribe(playerStateRecorder))
-            using (new CompositeDisposable(pluginManager.LoadedPlugins.Select(p => logMonitor.Subscribe(p.GetLogObserver()))))
-            using (logMonitor) // log monitor needs to get disposed first to ensure every plugin gets 'OnCompleted' event
-            {
-                Application.Run();
-            }
-            RootLog.Info("Shutting down");
-        }
-
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            var message = e.IsTerminating ? "Unhandled fatal exception" : "Unhandled exception";
-            var senderString = sender?.GetType()?.ToString() ?? "unknown";
-            var exceptionTypeString = e.ExceptionObject?.GetType()?.ToString() ?? "unknown";
-            var exceptionObjectString = e.ExceptionObject?.ToString() ?? "unknown";
-
-            if (e.ExceptionObject is Exception ex)
-                RootLog.Fatal(ex, message + " from {0}", senderString);
-            else
-                RootLog.Fatal(message + " of unknown type: {0} {1}", exceptionTypeString, exceptionObjectString);
-        }
+        if (e.ExceptionObject is Exception ex)
+            RootLog.Fatal(ex, message + " from {0}", senderString);
+        else
+            RootLog.Fatal(message + " of unknown type: {0} {1}", exceptionTypeString, exceptionObjectString);
     }
 }

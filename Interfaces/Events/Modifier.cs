@@ -1,25 +1,24 @@
 ﻿using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public class Modifier
 {
-    public class Modifier
-    {
-        [JsonProperty("Label")]
-        public string Label { get; set; }
+    [JsonProperty("Label")]
+    public required string Label { get; set; }
 
-        [JsonProperty("Value")]
-        public double? Value { get; set; }
+    [JsonProperty("Value")]
+    public double? Value { get; set; }
 
-        [JsonProperty("ValueStr")]
-        public string ValueStr { get; set; }
+    [JsonProperty("ValueStr")]
+    public string? ValueStr { get; set; }
 
-        [JsonProperty("ValueStr_Localised")]
-        public string ValueStrLocalised { get; set; }
+    [JsonProperty("ValueStr_Localised")]
+    public string? ValueStrLocalised { get; set; }
 
-        [JsonProperty("OriginalValue")]
-        public double? OriginalValue { get; set; }
+    [JsonProperty("OriginalValue")]
+    public double? OriginalValue { get; set; }
 
-        [JsonProperty("LessIsGood")]
-        public long? LessIsGood { get; set; }
-    }
+    [JsonProperty("LessIsGood")]
+    public long? LessIsGood { get; set; }
 }

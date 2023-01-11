@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface ILogRealTimeDataSource : IObservable<JournalEvent>, IDisposable
 {
-    public interface ILogRealTimeDataSource : IObservable<JournalEvent>, IDisposable
-    {
-    }
 }

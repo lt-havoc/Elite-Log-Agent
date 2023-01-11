@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace DW.ELA.Interfaces
+namespace DW.ELA.Interfaces;
+
+public interface IMessageBroker : IObservable<JournalEvent>, IObserver<JournalEvent>, IDisposable
 {
-    public interface IMessageBroker : IObservable<JournalEvent>, IObserver<JournalEvent>, IDisposable
-    {
-    }
 }

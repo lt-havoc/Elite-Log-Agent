@@ -1,17 +1,16 @@
 ﻿using DW.ELA.Interfaces;
 using Newtonsoft.Json;
 
-namespace DW.ELA.Interfaces.Events
+namespace DW.ELA.Interfaces.Events;
+
+public partial class Materials : JournalEvent
 {
-    public partial class Materials : JournalEvent
-    {
-        [JsonProperty("Raw")]
-        public Material[] RawMats { get; set; }
+    [JsonProperty("Raw")]
+    public required Material[] RawMats { get; set; }
 
-        [JsonProperty("Manufactured")]
-        public Material[] Manufactured { get; set; }
+    [JsonProperty("Manufactured")]
+    public required Material[] Manufactured { get; set; }
 
-        [JsonProperty("Encoded")]
-        public Material[] Encoded { get; set; }
-    }
+    [JsonProperty("Encoded")]
+    public required Material[] Encoded { get; set; }
 }
